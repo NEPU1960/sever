@@ -12,6 +12,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 def get_name_book():
+    '''图书检索'''
     session=requests.session()
     header = {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
