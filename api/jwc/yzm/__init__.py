@@ -6,5 +6,5 @@
 @contact: nepu1960@yeah.net
 @file: __init__.py.py
 @time: 2019/2/28 0028 08:25
-@desc:
+@desc:验证码识别
 """

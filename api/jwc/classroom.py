@@ -19,6 +19,8 @@ header={
     'Accept-Encoding':'gzip, deflate',
     'Host':'jwgl.nepu.edu.cn'
 }
+global login
+login=login_jwc()
 def te():
     login=login_jwc()
     data={
@@ -83,13 +85,33 @@ def te():
             else:
                 pass
     print(lb)
-def get_info_room():
-    pass
+def get_info_room(jsbh='00030'):
+    '''查询教室占用情况'''
+    url = 'http://jwgl.nepu.edu.cn/jiaowu/kxjsgl/kxjsgl.do?method=goQueryjszyqk&xnxqh=2018-2019-2&jsbh='+jsbh+'&kcsj=10304&typewhere=xszq&startZc=1&endZc=1&startJc=&endJc=&startXq=1&endXq=1&jszt=&type=add'
+    room_info=login.get(url).text
+    soup=BeautifulSoup(room_info,'lxml')
+    tr=soup.find_all('tr')
+    new_lb=[]
+    for i in tr[2:3]:
+        td=i.find_all('td')
 
+        for i in td[1:]:
+            new_lb.append(i.get_text('','\r\n\t\t\t\t\t\t\t\t\t\t'))
+    print(new_lb)
+
+    info={}
+    a=0
+    b=2
+    for i in range(8):
+        info[new_lb[a]]=new_lb[b]
+        a=a+3
+        b=b+3
+    print(info)
 
 if __name__ == '__main__':
     star=time.time()
-    te()
+    # te()
+    get_info_room()
     logout()
     end=time.time()
     print(end-star)
