@@ -10,8 +10,10 @@
 """
 import requests
 from bs4 import BeautifulSoup
+import datetime
+session=requests.session()
 def library_login():
-    session=requests.session()
+    '''图书馆登陆'''
     # session.get('http://210.46.140.21:8080/opac/index_wdtsg.jsp')
     login_data={
         'dztm':'178003070655',
@@ -35,6 +37,28 @@ def library_login():
                     name[i]=booke_txt[i].get_text()[:-1]
                 xiangxi.append(name)
         print(xiangxi)
+        back_list=[]#带有剩余过期谁建的返回信息
+        for i in xiangxi:
+            if i[10] =='':
+                tss=i[9]
+                date1 = datetime.datetime.strptime(tss, "%Y-%m-%d %H:%M:%S")
+                date2 = datetime.datetime.now()
+                num = (date1 - date2).days
+                print(num)
+
+            else:
+                tss = i[10]
+                date1 = datetime.datetime.strptime(tss, "%Y-%m-%d %H:%M:%S")
+                date2 = datetime.datetime.now()
+                num = (date1 - date2).days
+                print(num)
+                i[13] = num
+            i[13] = num
+            back_list.append(i)
+
+
+
+
 
 
     elif '读者密码错误！请重新输入！' in is_success:
@@ -43,4 +67,17 @@ def library_login():
     else:
         print('读者条码号不存在！请重新输入！')
         return '登陆失败'
+
+def extend_booke():
+    '''图书续借'''
+    extend_data={
+        'dztm':'178003070655',
+        'dctm':'01234687'
+    }
+    back_message=session.post('http://210.46.140.21:8080/opac/dzxj.jsp',data=extend_data)
+    print(back_message.text)
+def logout_library():
+    session.post('http://210.46.140.21:8080/opac/dztc.jsp')
 library_login()
+extend_booke()
+logout_library()
