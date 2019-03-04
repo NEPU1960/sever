@@ -16,7 +16,7 @@ def library_login():
     '''图书馆登陆'''
     # session.get('http://210.46.140.21:8080/opac/index_wdtsg.jsp')
     login_data={
-        'dztm':'178003070655',
+        'dztm':'188002070322',
          'dzmm':'0000'
     }
     is_success=session.post('http://210.46.140.21:8080/opac/dzjsjg.jsp',data=login_data).text#图书馆登陆
@@ -39,24 +39,12 @@ def library_login():
         print(xiangxi)
         back_list=[]#带有剩余过期时间的返回信息
         for i in xiangxi:
-            if i[10] =='':
-                tss=i[9]
-                date1 = datetime.datetime.strptime(tss, "%Y-%m-%d %H:%M:%S")
-                date2 = datetime.datetime.now()
-                num = (date1 - date2).days
-                print(num)
-
-            else:
-                tss = i[10]
-                date1 = datetime.datetime.strptime(tss, "%Y-%m-%d %H:%M:%S")
-                date2 = datetime.datetime.now()
-                num = (date1 - date2).days
-                print(num)
-                i[13] = num
+            tss=i[9]
+            date1 = datetime.datetime.strptime(tss, "%Y-%m-%d %H:%M:%S")
+            date2 = datetime.datetime.now()
+            num = (date1 - date2).days
             i[13] = num
             back_list.append(i)
-
-
     elif '读者密码错误！请重新输入！' in is_success:
         print('读者密码错误！请重新输入！')
         return '登陆失败'
@@ -67,11 +55,13 @@ def library_login():
 def extend_booke():
     '''图书续借'''
     extend_data={
-        'dztm':'178003070655',
-        'dctm':'01234687'
+        'dztm':'188002070322',
+        'dctm':'01407850'
     }
-    back_message=session.post('http://210.46.140.21:8080/opac/dzxj.jsp',data=extend_data)
-    print(back_message.text)
+    back_message=session.post('http://210.46.140.21:8080/opac/dzxj.jsp',data=extend_data).text
+    if 'success' in back_message:
+        print('续借成功')
+    else:print(back_message)
 def logout_library():
     session.post('http://210.46.140.21:8080/opac/dztc.jsp')
 library_login()
