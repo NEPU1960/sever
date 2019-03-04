@@ -96,6 +96,7 @@ def socer():
 
 
 def info():
+    '''个人信息获取'''
     url="http://jwgl.nepu.edu.cn/xszhxxAction.do?method=addStudentPic&tktime="+str(int(time.time()))
     print(url)
 
