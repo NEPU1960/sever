@@ -164,6 +164,7 @@ def get_jxjh():
 def logout():
     login.get('http://jwgl.nepu.edu.cn/Logon.do?method=logout',headers=header)
 
+
 if __name__ == '__main__':
     c=login_jwc()
     get_kb()
