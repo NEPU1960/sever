@@ -5,6 +5,6 @@
 @license: (C) Copyright 2017-2018, Node Supply Chain Manager Corporation Limited.
 @contact: nepu1960@yeah.net
 @file: __init__.py.py
-@time: 2019/2/28 0028 08:25
-@desc:验证码识别
+@time: 2019/3/4 0004 15:14
+@desc:
 """
