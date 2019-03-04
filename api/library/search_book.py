@@ -102,8 +102,6 @@ def get_info(url):
 
         }
         print(extend_info)
-        return extend_info
-
 
 
 
