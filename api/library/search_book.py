@@ -106,5 +106,6 @@ def get_info(url):
 
 
 
+if __name__ == '__main__':
 
-get_info('http://210.46.140.21:8080/opac/ckgc.jsp?kzh=zyk0455217')
+    get_info('http://210.46.140.21:8080/opac/ckgc.jsp?kzh=zyk0455217')
