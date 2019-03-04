@@ -48,7 +48,7 @@ def te():
         for i in tr[3:-2]:
             class_info = {}
             td=i.find_all('td')
-            print(td)
+            #print(td)
             jc = 0
             for i in td:
                 text=i.get_text()
@@ -56,8 +56,11 @@ def te():
                 if jc==0:
                     try:
                         room_name = re.search('((1H-)|(2A-)|(1F-)|(主楼))[0-9]+',text).group()
-                        print(room_name)
+                        roomID = re.search('ue=.\w+', str(i)).group()
+                        # print(roomID[4:])
+                        # print(room_name)
                         class_info['room'] = room_name
+                        class_info['roomID']=roomID[4:]
                     except:
                           break
                 else:
@@ -80,8 +83,8 @@ def te():
             else:
                 pass
     print(lb)
-
-    #print(table)
+def get_info_room():
+    pass
 
 
 if __name__ == '__main__':
