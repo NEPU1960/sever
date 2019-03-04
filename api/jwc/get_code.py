@@ -24,11 +24,11 @@ header={
     'Accept-Encoding':'gzip, deflate',
     'Host':'jwgl.nepu.edu.cn'
 }
-# def get_session():
-#     global login
-#     login = requests.session()
-#     session = login.get('http://jwgl.nepu.edu.cn')
-#     return login
+def get_session():
+    global login
+    login = requests.session()
+    session = login.get('http://jwgl.nepu.edu.cn')
+    return login
 
 def login_jwc():
     '''教务处登陆'''
@@ -95,34 +95,7 @@ def socer():
             'grade':span[3].get_text()[:-1]
         }
 
-def info():
-    '''个人信息获取'''
-    url="http://jwgl.nepu.edu.cn/xszhxxAction.do?method=addStudentPic&tktime="+str(int(time.time()))
-    get_info = login.get(url).text
-    soup=BeautifulSoup(get_info,'lxml')
-    detailed_info=soup.find_all('tr')
-    info=detailed_info[4].find_all('td')
 
-    yuanxi=info[0].get_text()[3:]
-    zhuanye=info[1].get_text()[3:]
-    xuezhi=info[2].get_text()[3:]
-    banji=info[3].get_text()[3:]
-    xuehao=info[4].get_text()[3:]
-    next_info = detailed_info[5].find_all('td')
-    year=str(int(xuezhi)+int(xuehao[0:2]))
-    xinxi={
-        '姓名': next_info[1].get_text()[1:],
-        '院系':yuanxi,
-        '专业':zhuanye,
-        '学制':xuezhi,
-        '班级':banji,
-        '学号':xuehao,
-        '性别':next_info[3].get_text()[1:],
-        '毕业日期':'20'+year
-    }
-    get_info_picture = login.get("http://jwgl.nepu.edu.cn/uploadfile/studentphoto/pic/{}.JPG".format(140202140214),headers=header)
-    with open('zjz.jpg', 'wb')as f:
-        f.write(get_info_picture.content)
 
 
 def get_kb():
