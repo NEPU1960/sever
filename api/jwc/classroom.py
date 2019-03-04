@@ -48,7 +48,7 @@ def te():
         for i in tr[3:-2]:
             class_info = {}
             td=i.find_all('td')
-            #print(td)
+            print(td)
             jc = 0
             for i in td:
                 text=i.get_text()
@@ -75,9 +75,11 @@ def te():
                         class_info[jc] = '临时调课'
                     else:class_info[jc] = '空闲'
                 jc = jc + 1
-            lb.append(class_info)
+            if class_info:
+                lb.append(class_info)
+            else:
+                pass
     print(lb)
-
 
     #print(table)
 
