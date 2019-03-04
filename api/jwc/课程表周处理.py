@@ -1,5 +1,5 @@
 import re
-c='value="jBj9p94vPQaCUljVC7CBMV7h1jmE9w4/dykUmrE6E8wJ/EjdfCmmIGNlLa7SBnjqcQra04+Oam0lTdAs9YX1wg=="'
-print(type(c))
-t=re.search('value.*',c).group()
+c='<input id="jsids" name="jsids" type="checkbox" value="31E24556DF70492AB22A553586832C39"/>'
+
+t=re.search('ue=.\w+',c).group()
 print(t)
