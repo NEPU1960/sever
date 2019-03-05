@@ -13,6 +13,7 @@ from PIL import Image
 from io import BytesIO
 from api.jwc.yzm.getcode import get_validate_code_from_image
 from bs4 import BeautifulSoup
+from api.jwc.zhouchuli import get_zhou_list
 import time
 
 global login
@@ -145,7 +146,7 @@ def get_kb():
                                 '课程': h[0],
                                 '教师': h[2],
                                 '教室': h[4],
-                                '周次': h[3],
+                                '周次': get_zhou_list(h[3]),
                                 '班级': h[1],
                             }
                             total.append(info)

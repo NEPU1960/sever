@@ -11,9 +11,10 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-global session
+from api.yjs.jx import get_list
 session=requests.session()
 def get_login():
+    '''登陆'''
     data={
         'userName': '178003070655',
         'password': 'zhmsn5211314',
@@ -29,11 +30,12 @@ def get_login():
 
     session.post(url,data=data,headers=header)
     return session
-def get_score():
+def get_score(xn='',xq=''):
+    '''成绩获取'''
     url='http://172.16.199.2:8008/yjsjwgl/xscjcx.do?act=find'
     data={
-        'xn':'',
-        'xq':''
+        'xn':xn,
+        'xq':xq
     }
     '''研究生成绩查询'''
     info=session.post(url,data=data).text
@@ -55,11 +57,13 @@ def get_score():
             }
             score.append(score_info)
     print(score)
-def get_class():
+def get_class(xn=2018-2019,xq=1):
+    '''课表获取'''
+
     data={
         'dm':'',
-        'xn':'2017-2018',
-        'xq': '2'
+        'xn':xn,
+        'xq': xq
     }
     url='http://172.16.199.2:8008/yjsjwgl/xsgrkbck.do'
     info=session.post(url,data=data).text
@@ -86,14 +90,12 @@ def get_class():
                     'teacher':td[2].string,
                     'xingzhi':td[3].string,
                     'week':week,
-                    'jc':jc[:-1],
+                    'jc':get_list(jc[:-1]),
                     'didian':didian,
-                    'zhouci':zhouci[1:-2],
+                    'zhouci':get_list(zhouci[1:-2]),
                 }
                 list.append(info_class)
     print(list)
-
-
 if __name__ == '__main__':
 
     get_login()
