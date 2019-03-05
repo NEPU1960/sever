@@ -54,25 +54,27 @@ def login():
         'rand':'8888'
     }
 
+
     ecard_login=session.post('http://yikatong.nepu.edu.cn/loginstudent.action',data=data,headers=header)
-    # te=session.get('http://yikatong.nepu.edu.cn/accountleftFrame.action',headers=header)
-    # print(te.text)
-    get_usernumber=session.get('http://yikatong.nepu.edu.cn/accounthisTrjn.action').text #获取账号
-    #print(choose_user)
+    ecard_post_data = {
+        'account': '38182',
+        'inputObject': 'all',
+        'Submit': '+确+定+'
+    }
+    get_usernumber=session.post('http://yikatong.nepu.edu.cn/accounthisTrjn.action',data=ecard_post_data).text #获取账号
+    #print(get_usernumber)
     soup=BeautifulSoup(get_usernumber,'lxml')
     user_number=soup.find('select').get_text()#获取账号
     adress=str(soup.find_all('form'))
     sc = re.search(r'"/accounthisTrjn.action[^\s]*', adress).group()#获取账单查询地址
     # print(sc)
     post_url='http://yikatong.nepu.edu.cn'+sc[1:-1]
-    # print('账单地址',post_url)
-    #print(user_number)
     ecard_post_data={
-        'account':user_number,
+        'account':'38182',
         'inputObject':'all',
-        'Submit' :'+ % C8 % B7 + % B6 % A8 +'
+        'Submit' :'+确+定+'
     }
-    post=session.post(post_url,data=ecard_post_data).text
+    post=session.post(post_url,data=ecard_post_data,headers=header).text
     # print(post)
     soup2=BeautifulSoup(post,'lxml')
     adress2=str(soup2.find_all('form'))
@@ -81,8 +83,8 @@ def login():
     post_url = 'http://yikatong.nepu.edu.cn' + sc[1:-1]
     # print('查询日期地址',post_url)
     ecard_post_time_data={
-        "inputEndDate": "20170930",
-        "inputStartDate": "20170801",
+        'inputStartDate':'20190221',
+        'inputEndDate':'20190305'
     }
     te=session.post(post_url,data=ecard_post_time_data).text
     #print(te)
@@ -91,37 +93,38 @@ def login():
     # print(adress3)
     exp = re.compile('action="(.*)"\sid')
     url = exp.findall(str(adress3))[0]
-    print(url)
     last_sc3 = re.search(r'__continue=[^\s]*', adress3).group()  # 获取查询提交地址
-    print('最终查询地址',last_sc3[:-1])
     post_url2 = 'http://yikatong.nepu.edu.cn/accounthisTrjn.action'+url
     test={
         '__continue' :last_sc3[:-1]
     }
-    print(post_url2)
-    test_url='http://yikatong.nepu.edu.cn/accounthisTrjn.action?__continue=6a5891cbdf5c768522168250b7eb1534'
-    post_header = {
-        'Content - Type': 'application / x - www - form - urlencoded',
-        'Connection': 'Keep-Alive',
-        'Host': 'yikatong.nepu.edu.cn',
-        'Referer':post_url,
-        'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; InfoPath.2)',
-        'Accept': 'text/html, application/xhtml+xml, */*',
-        'Accept-Language':'zh-CN',
-        'Content-Length':	'0',
-        'Pragma':	'no-cache',
-        'Accept-Encoding':	'gzip, deflate'
-    }
-    te = session.post(post_url2,headers=post_header).text
-    print(te)
+    te = session.get(post_url2,headers=header).text
+    #print(te)
+    soup=BeautifulSoup(te,'lxml')
+    jixi=soup.find_all('tr',attrs={"class": re.compile("^listbg")})
+    #print(jixi)
+    zhangdan=[]
+    for i in  jixi:
+        td=i.find_all('td')
+        info={
+            '时间':td[0].string,
+            '交易类型':td[1].string,
+            '子系统名称':td[2].string,
+            '电子账户':td[3].string,
+            '交易额':td[4].string,
+            '现有余额':td[5].string,
+            '次数':td[6].string,
+            '状态':td[7].string
+        }
+        zhangdan.append(info)
+    print(zhangdan)
+
 
 
     # info=session.post('http://yikatong.nepu.edu.cn/accounthisTrjn.action?__continue=01fc9786b8fc802bc910007d43a2cc10')
     # print(info.text)
     '''获取用户信息、账号'''
-    user_info=session.get('http://yikatong.nepu.edu.cn/accountcardUser.action')
-    print(user_info.text)
-
-
+    # user_info=session.get('http://yikatong.nepu.edu.cn/accountcardUser.action')
+    # print(user_info.text)
 
 login()
