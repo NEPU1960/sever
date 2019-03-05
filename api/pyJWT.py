@@ -47,6 +47,7 @@ def verify_bearer_token(token):
         print(payload)
         return True, token
     return False, token
+
 create_token()
 token=b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJndXNpYmkuY29tIiwiaWF0IjoxNTUxNzkwOTQ1LCJleHAiOjE1NTE3OTA5NTMsImF1ZCI6InFreXpzIiwic3ViIjoiMTc4MDAzMDcwNjU1IiwidXNlcm5hbWUiOiJcdTYyMWFcdTVmMDBcdTUxNDMiLCJ0eXBleXNjb3BlcyI6WyJvcGVuIl19.0xRl9f648409i9YAtILwVMn3fjmGhKAxXHV2cWg1Evc'
 
