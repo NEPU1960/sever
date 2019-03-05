@@ -10,6 +10,9 @@
 """
 import requests
 from bs4 import BeautifulSoup
+import re
+global session
+session=requests.session()
 def get_login():
     data={
         'userName': '178003070655',
@@ -23,8 +26,10 @@ def get_login():
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
     }
     url='http://172.16.199.2:8008/yjsjwgl/login.do'
-    session=requests.session()
+
     session.post(url,data=data,headers=header)
+    return session
+def get_score():
     url='http://172.16.199.2:8008/yjsjwgl/xscjcx.do?act=find'
     data={
         'xn':'',
@@ -50,8 +55,48 @@ def get_login():
             }
             score.append(score_info)
     print(score)
+def get_class():
+    data={
+        'dm':'',
+        'xn':'2017-2018',
+        'xq': '2'
+    }
+    url='http://172.16.199.2:8008/yjsjwgl/xsgrkbck.do'
+    info=session.post(url,data=data).text
+    soup=BeautifulSoup(info,'lxml')
+    div=soup.find_all('div')
+    list=[]
+    for i in div[3:]:
+        tr=i.find_all('tr')
+        for i in tr[1:]:
+            td=i.find_all('td')
+            fen=td[4].string
+            te=fen.split('/')
+            # print(te)
+            for i in te:
+                print(i)
+                week = re.search('周.', i).group()
+
+                jc = re.search('[0-9].*节', i).group()
+                didian = re.search('【.+】', i).group()
+                zhouci = re.search('】.+周', i).group()
+                info_class={
+                    'name':td[0].string,
+                    'xuefen':td[1].string,
+                    'teacher':td[2].string,
+                    'xingzhi':td[3].string,
+                    'week':week,
+                    'jc':jc[:-1],
+                    'didian':didian,
+                    'zhouci':zhouci[1:-2],
+                }
+                list.append(info_class)
+    print(list)
 
 
-get_login()
+if __name__ == '__main__':
+
+    get_login()
+    get_class()
 
 
