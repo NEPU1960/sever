@@ -54,7 +54,7 @@ def login_jwc():
     }
     success = login.post('http://jwgl.nepu.edu.cn/Logon.do?method=logon', data=data,headers=header)
     if "验证码错误!!" in success.text:
-        return '验证码错误'
+        login_jwc()
     elif '该帐号不存在或密码错误,请联系管理员' in success.text:
         return '学号或密码输入错误'
     else:
