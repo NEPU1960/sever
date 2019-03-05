@@ -8,11 +8,9 @@
 @time: 2019/3/4 0004 08:29
 @desc:
 """
-import re
-
-te='45.46元（卡余额）0.00元(当前过渡余额)50.00元(上次过渡余额)'
-a=re.search('.+(卡)',te).group()
-b=re.search('(额).+(当)',te).group()
-c=re.search('(过渡余额).+(上)',te).group()
-print(a[:-2],b[2:-2],c[5:-2])
-
+import requests
+status=requests.get('http://210.46.140.21')
+print(status.status_code)
+if status.status_code==200:
+    print('scuss')
+else:print('fail')
