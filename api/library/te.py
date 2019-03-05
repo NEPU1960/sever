@@ -10,7 +10,9 @@
 """
 import re
 
-c="onclick=seegc('zyk','zyk0519750')"
-print(re.search('zyk[0-9]+',c).group())
-# print(re.search('zyk[^\b]\'',c).group())
+te='45.46元（卡余额）0.00元(当前过渡余额)50.00元(上次过渡余额)'
+a=re.search('.+(卡)',te).group()
+b=re.search('(额).+(当)',te).group()
+c=re.search('(过渡余额).+(上)',te).group()
+print(a[:-2],b[2:-2],c[5:-2])
 
