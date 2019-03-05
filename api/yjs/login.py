@@ -13,23 +13,44 @@ from bs4 import BeautifulSoup
 import re
 from api.yjs.jx import get_list
 session=requests.session()
-def get_login():
-    '''登陆'''
-    data={
-        'userName': '178003070655',
-        'password': 'zhmsn5211314',
-        'radiovalue':'student'
-    }
-    header={
+header={
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
         'Content-Type': 'application/x-www-form-urlencoded',
         'Host': '172.16.199.2:8008',
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
     }
+def get_login(xh,pwd):
+    '''登陆'''
+    data={
+        'userName': xh,
+        'password': pwd,
+        'radiovalue':'student'
+    }
+
     url='http://172.16.199.2:8008/yjsjwgl/login.do'
 
-    session.post(url,data=data,headers=header)
-    return session
+    back_info=session.post(url,data=data,headers=header)
+    if back_info.status_code!=200:
+        return 404
+    elif '用户名或密码不正确' in back_info.text:
+        return '学号或密码错误'
+    else:
+        return session
+def get_info(xh):
+    '''获取个人信息'''
+    url='http://172.16.199.2:8008/yjsjwgl/xsxxwh.do?method=xsgrxxwh'
+    info=session.get(url,headers=header).text
+    soup=BeautifulSoup(info,'lxml')
+    name=str(soup.find_all('input')[5])
+    zjhm=str(soup.find_all('input')[8])
+    name=re.search('value=.+',name).group().replace('value="','').replace('"/>','')
+    zjhm = re.search('value=.+', zjhm).group().replace('value="','').replace('"/>','')
+    info={
+        'xh':xh,
+        'name':name,
+        'zjhm':zjhm
+    }
+    print(name,zjhm)
 def get_score(xn='',xq=''):
     '''成绩获取'''
     url='http://172.16.199.2:8008/yjsjwgl/xscjcx.do?act=find'
@@ -38,7 +59,7 @@ def get_score(xn='',xq=''):
         'xq':xq
     }
     '''研究生成绩查询'''
-    info=session.post(url,data=data).text
+    info=session.post(url,data=data,headers=header).text
     #print(info)
     soup=BeautifulSoup(info,'lxml')
     div=soup.find_all('div')
@@ -66,7 +87,7 @@ def get_class(xn=2018-2019,xq=1):
         'xq': xq
     }
     url='http://172.16.199.2:8008/yjsjwgl/xsgrkbck.do'
-    info=session.post(url,data=data).text
+    info=session.post(url,data=data,headers=header).text
     soup=BeautifulSoup(info,'lxml')
     div=soup.find_all('div')
     list=[]
@@ -99,6 +120,4 @@ def get_class(xn=2018-2019,xq=1):
 if __name__ == '__main__':
 
     get_login()
-    get_class()
-
 
