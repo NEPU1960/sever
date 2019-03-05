@@ -33,6 +33,7 @@ def get_login(xh,pwd):
     if back_info.status_code!=200:
         return 404
     elif '用户名或密码不正确' in back_info.text:
+
         return '学号或密码错误'
     else:
         return session
