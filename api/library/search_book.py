@@ -57,7 +57,7 @@ def get_name_book():
     info_book={}
     for i in table[1:]:
         print(i)
-        herf=re.search('zyk[0-9]+',str(i)).group()
+        herf=re.search('zyk[0-9]+',str(i)).group()#获取书地址
         text=i.get_text('\xa0','<br/>')
         new_text=text.split('\xa0')
         #print(new_text)

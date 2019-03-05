@@ -32,7 +32,6 @@ def login():
         'Content - Type': 'application / x - www - form - urlencoded',
         'Connection': 'Keep-Alive',
         'Host': 'yikatong.nepu.edu.cn',
-        'Connection':	'Keep-Alive',
         'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; InfoPath.2)',
         'Accept':	'application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*'
     }
@@ -53,27 +52,38 @@ def login():
          'loginType':'2',
         'rand':'8888'
     }
-
-
-    ecard_login=session.post('http://yikatong.nepu.edu.cn/loginstudent.action',data=data,headers=header)
+    session.post('http://yikatong.nepu.edu.cn/loginstudent.action',data=data,headers=header)
+    '''获取用户信息、账号'''
+    user_info=session.get('http://yikatong.nepu.edu.cn/accountcardUser.action').text
+    soup=BeautifulSoup(user_info,'lxml')
+    te=soup.find_all('table')
+    number=soup.find_all('div')
+    user_number=number[4].string#一卡通账号获取
+    print(user_number)
+    for i in te[1:2]:
+        tr=i.find_all('td')
+        te=tr[-5].string
+    a = re.search('.+(卡)', te).group()
+    b = re.search('(额).+(当)', te).group()
+    c = re.search('(过渡余额).+(上)', te).group()
+    yue={
+        '卡余额':a[:-2],
+        '当前过渡余额':b[2:-2],
+        '上次过渡余额':c[5:-2],
+    }
+    print(yue)
     ecard_post_data = {
-        'account': '38182',
+        'account': user_number,
         'inputObject': 'all',
         'Submit': '+确+定+'
     }
     get_usernumber=session.post('http://yikatong.nepu.edu.cn/accounthisTrjn.action',data=ecard_post_data).text #获取账号
     #print(get_usernumber)
     soup=BeautifulSoup(get_usernumber,'lxml')
-    user_number=soup.find('select').get_text()#获取账号
     adress=str(soup.find_all('form'))
     sc = re.search(r'"/accounthisTrjn.action[^\s]*', adress).group()#获取账单查询地址
     # print(sc)
     post_url='http://yikatong.nepu.edu.cn'+sc[1:-1]
-    ecard_post_data={
-        'account':'38182',
-        'inputObject':'all',
-        'Submit' :'+确+定+'
-    }
     post=session.post(post_url,data=ecard_post_data,headers=header).text
     # print(post)
     soup2=BeautifulSoup(post,'lxml')
@@ -83,8 +93,8 @@ def login():
     post_url = 'http://yikatong.nepu.edu.cn' + sc[1:-1]
     # print('查询日期地址',post_url)
     ecard_post_time_data={
-        'inputStartDate':'20190221',
-        'inputEndDate':'20190305'
+        'inputStartDate':'20181201',
+        'inputEndDate':'20181231'
     }
     te=session.post(post_url,data=ecard_post_time_data).text
     #print(te)
@@ -99,32 +109,53 @@ def login():
         '__continue' :last_sc3[:-1]
     }
     te = session.get(post_url2,headers=header).text
-    #print(te)
-    soup=BeautifulSoup(te,'lxml')
-    jixi=soup.find_all('tr',attrs={"class": re.compile("^listbg")})
-    #print(jixi)
-    zhangdan=[]
-    for i in  jixi:
-        td=i.find_all('td')
-        info={
-            '时间':td[0].string,
-            '交易类型':td[1].string,
-            '子系统名称':td[2].string,
-            '电子账户':td[3].string,
-            '交易额':td[4].string,
-            '现有余额':td[5].string,
-            '次数':td[6].string,
-            '状态':td[7].string
+    exp = re.compile("&nbsp;&nbsp;.(\d{1,2}).*&nbsp.*\d")
+    PageCount = int(exp.findall(te)[0])#总页面数
+    print(PageCount)
+
+    '''获取页信息'''
+    data={
+        'pageNum':'1'
+    }
+    te=session.post('http://yikatong.nepu.edu.cn/accountconsubBrows.action',data=data,headers=header).text
+    soup = BeautifulSoup(te, 'lxml')
+    jixi = soup.find_all('tr', attrs={"class": re.compile("^listbg")})
+    # print(jixi)
+    zhangdan = []
+    for i in jixi:
+        td = i.find_all('td')
+        info = {
+            '时间': td[0].string,
+            '交易类型': td[1].string,
+            '子系统名称': td[2].string,
+            '电子账户': td[3].string,
+            '交易额': td[4].string,
+            '现有余额': td[5].string,
+            '次数': td[6].string,
+            '状态': td[7].string
         }
-        zhangdan.append(info)
+        zhangdan.append(info)  # 总消费记录
     print(zhangdan)
 
 
-
-    # info=session.post('http://yikatong.nepu.edu.cn/accounthisTrjn.action?__continue=01fc9786b8fc802bc910007d43a2cc10')
-    # print(info.text)
-    '''获取用户信息、账号'''
-    # user_info=session.get('http://yikatong.nepu.edu.cn/accountcardUser.action')
-    # print(user_info.text)
+    # '''获取用户信息、账号'''
+    # user_info=session.get('http://yikatong.nepu.edu.cn/accountcardUser.action').text
+    # soup=BeautifulSoup(user_info,'lxml')
+    # te=soup.find_all('table')
+    # number=soup.find_all('div')
+    # user_number=number[4].string#一卡通账号获取
+    # print(user_number)
+    # for i in te[1:2]:
+    #     tr=i.find_all('td')
+    #     te=tr[-5].string
+    # a = re.search('.+(卡)', te).group()
+    # b = re.search('(额).+(当)', te).group()
+    # c = re.search('(过渡余额).+(上)', te).group()
+    # yue={
+    #     '卡余额':a[:-2],
+    #     '当前过渡余额':b[2:-2],
+    #     '上次过渡余额':c[5:-2],
+    # }
+    # print(yue)
 
 login()
