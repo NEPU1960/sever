@@ -24,7 +24,7 @@ def create_app():
     db.init_app(app)
 
     from .api2 import api
-    app.register_blueprint(api)
+    app.register_blueprint(api,url_prefix='/api')
     return app
 
 
