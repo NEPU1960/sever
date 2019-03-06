@@ -39,12 +39,12 @@ def get_pay_keyboard_number_location(im, pwd):
     templates = {}
     positions = {}
     lie={}
-    nimgpath ='' # 数字图片不在同目录时使用
+    nimgpath ='./get_pwd' # 数字图片不在同目录时使用
     for i in numbers:
         templates[i] = os.path.join(nimgpath, "{}.png".format(i))
+    #img_rgb = cv2.imread(im)
+    img_rgb = cv2.cvtColor(np.array(im), cv2.COLOR_RGB2BGR)
 
-    start = time.time()
-    img_rgb = cv2.imread(im)
     for teNum, tepath in templates.items():
         template = cv2.imread(tepath)
         h,w = template.shape[:-1]
@@ -58,12 +58,10 @@ def get_pay_keyboard_number_location(im, pwd):
              lie={ '1': ([10], [36]), '5': ([9], [144]), '6': ([81], [106]), '3': ([81], [71])}
         else:
             print("Can not found number: [{}] in image: [{}].".format(tepath, im))
-
-    end = time.time()
-    print(end - start)
+            return {'msg':'密码未能完全识别'}
     d={}
     new_pwd=[]
-    print(positions)
+    #print(positions)
     for i in pwd:
         s = str(positions[i])
         m = hashlib.md5(s.encode())
@@ -74,11 +72,10 @@ def get_pay_keyboard_number_location(im, pwd):
 if __name__ == "__main__":
     url='http://yikatong.nepu.edu.cn/getpasswdPhoto.action'
     pw=requests.get(url)
-    im = Image.open(BytesIO(pw.content))
-    im = im.convert('L')
-    with open('im.png','wb') as f:
+    with open ('im.png','wb') as f:
         f.write(pw.content)
-    ls = get_pay_keyboard_number_location('im.png', '1234567890')
+    im = Image.open(BytesIO(pw.content))
+    ls = get_pay_keyboard_number_location(im, '1234567890')
     print(ls)
     #print(ls)
     # for i in range(6):
