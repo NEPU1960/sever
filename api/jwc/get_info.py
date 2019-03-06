@@ -17,9 +17,8 @@ header={
     'Accept-Encoding':'gzip, deflate',
     'Host':'jwgl.nepu.edu.cn'
 }
-def info():
+def info(login):
     '''个人信息获取'''
-    login=login_jwc()
     url="http://jwgl.nepu.edu.cn/xszhxxAction.do?method=addStudentPic&tktime="+str(int(time.time()))
     get_info = login.get(url).text
     soup=BeautifulSoup(get_info,'lxml')
@@ -50,7 +49,8 @@ def info():
     }
     print(xinxi)
     get_info_picture = login.get("http://jwgl.nepu.edu.cn/uploadfile/studentphoto/pic/{}.JPG".format(xuehao),headers=header)
-    with open('zjz.jpg', 'wb')as f:
+    with open(xuehao+'.jpg', 'wb')as f:
         f.write(get_info_picture.content)
+    return (xinxi)
 if __name__ == '__main__':
     info()

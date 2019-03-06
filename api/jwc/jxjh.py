@@ -18,9 +18,8 @@ header={
     'Accept-Encoding':'gzip, deflate',
     'Host':'jwgl.nepu.edu.cn'
 }
-global login
-login=login_jwc()
-def get_info():
+def get_jxjh(login):
+    '''获取教学计划'''
     get_jxjh = login.get("http://jwgl.nepu.edu.cn/pyfajhgl.do?method=toViewJxjhXs&tktime=" + str(int(time.time())),
                          headers=header).text
     soup=BeautifulSoup(get_jxjh,'lxml')
@@ -32,12 +31,12 @@ def get_info():
         # print(table)
         for i in table:
             td=i.find_all('td')
-            #print(td)
             danwei={}
             for i in range(12):
                 danwei[cankao[i]]=td[i].get_text('','\xa0')
                 info.append(danwei)
-    print(info)
+    return info
 
 
-get_info()
+if __name__ == '__main__':
+    get_jxjh()

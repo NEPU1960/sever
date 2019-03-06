@@ -6,23 +6,28 @@
 @contact: nepu1960@yeah.net
 @file: classroom.py
 @time: 2019/3/4 0004 14:19
-@desc:
+@desc:空教室查询，详细信息需完善，暂不启用详细信息功能
 """
 import requests
 from api.jwc.get_code import login_jwc,logout
 from bs4 import BeautifulSoup
 import re
 import time
+from api.jwc.get_week import today_week
 header={
     'Accept':'application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*',
     'User-Agent':'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; InfoPath.2)',
     'Accept-Encoding':'gzip, deflate',
     'Host':'jwgl.nepu.edu.cn'
 }
-global login
-login=login_jwc()
-def te():
-    login=login_jwc()
+username='130101140323'
+pwd='032050'
+login=login_jwc(username,pwd)
+zc=today_week()['zhou']
+xq=today_week()['week']
+def te(zc,xq):
+    '''查询空教室'''
+
     data={
         'typewhere':'xszq',
         'xnxqh':'2018-2019-2',
@@ -33,10 +38,10 @@ def te():
         'bjfh':'%3D',
         'rnrs':'',
         'jszt':'',
-        'zc':'1',
-        'zc2':'1',
-        'xq':'1',
-        'xq2':'1',
+        'zc':zc,
+        'zc2':zc,
+        'xq':xq,
+        'xq2':xq,
         'jc':'',
         'jc2':'',
     }
@@ -84,10 +89,11 @@ def te():
                 lb.append(class_info)
             else:
                 pass
-    print(lb)
-def get_info_room(jsbh='00030'):
-    '''查询教室占用情况'''
-    url = 'http://jwgl.nepu.edu.cn/jiaowu/kxjsgl/kxjsgl.do?method=goQueryjszyqk&xnxqh=2018-2019-2&jsbh='+jsbh+'&kcsj=10304&typewhere=xszq&startZc=1&endZc=1&startJc=&endJc=&startXq=1&endXq=1&jszt=&type=add'
+    return lb
+def get_info_room(kcsj='10304',jsbh='00030'):
+    '''查询教室占用情况'''#还需要完善，暂时不启用
+    url = 'http://jwgl.nepu.edu.cn/jiaowu/kxjsgl/kxjsgl.do?method=goQueryjszyqk&xnxqh=2018-2019-2&jsbh='+jsbh+'&kcsj='+kcsj+'&typewhere=' \
+           'xszq&startZc='+zc+'&endZc='+zc+'&startJc=&endJc=&startXq=1&endXq=1&jszt=&type=add'
     room_info=login.get(url).text
     soup=BeautifulSoup(room_info,'lxml')
     tr=soup.find_all('tr')

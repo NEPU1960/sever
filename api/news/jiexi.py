@@ -13,22 +13,25 @@ import bs4
 def about():
     url='http://news.nepu.edu.cn/news/155168791695864583.html'
     news=requests.get(url)
-    news=news.content
-    beautifulsoup=bs4.BeautifulSoup
-    soup=beautifulsoup(news,'html5lib')
-    titles = soup.find_all('title')[0].string[:-20]
-    authors = soup.select('.puber')[0].string
-    departments = soup.select('.bm')[0].string
-    times = soup.select('.pubtime')[0].string
-    msgs = soup.find('div', id='xwcontentdisplay')
-    text={
-        'title':titles,
-        'authors':authors,
-        'departments':departments,
-        'times':times,
-        'msgs':msgs
-    }
-    print(text)
+    if news.status_code != 200:
+        return 404
+    else:
+        news=news.content
+        beautifulsoup=bs4.BeautifulSoup
+        soup=beautifulsoup(news,'html5lib')
+        titles = soup.find_all('title')[0].string[:-20]
+        authors = soup.select('.puber')[0].string
+        departments = soup.select('.bm')[0].string
+        times = soup.select('.pubtime')[0].string
+        msgs = soup.find('div', id='xwcontentdisplay')
+        text={
+            'title':titles,
+            'authors':authors,
+            'departments':departments,
+            'times':times,
+            'msgs':msgs
+        }
+        print(text)
 
 
 about()

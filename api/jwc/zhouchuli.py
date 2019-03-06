@@ -11,13 +11,11 @@
 import re
 import copy
 def get_zhou_list(c):
+    '''课表中周数解析为列表'''
     te=re.search('周.*',c).group()
     new=c.replace(te,'')
     t=new.split('-')
     zhou=[]
-    # for i in range(int(t[-2]),int(t[:-1])+1):
-    #     print(i)
-    #     zhou.append(i)
     if ',' in new:
         d=new.split(',')
         del_dist = copy.deepcopy(d)

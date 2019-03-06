@@ -11,6 +11,7 @@
 import time
 import datetime
 def today_week():
+    '''获取当前星期、周数'''
     week=time.localtime()
     get_week=time.strftime("%w",week)#星期
     st=datetime.datetime.strptime('2019-03-04', "%Y-%m-%d")#开学日期
@@ -18,7 +19,6 @@ def today_week():
     jg=(en-st).days#日期间隔
 
     zhou=int(jg/7+1)
-    print('今天星期：',get_week)
-    print('第',zhou,'周')
+    return {'week':get_week,'zhou':zhou}
 if __name__ == '__main__':
-    today_week()
+    print(today_week()['week'])
