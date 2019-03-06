@@ -24,6 +24,7 @@ from flask_migrate import Migrate, MigrateCommand
 #app.config.from_object('main.config')
 #app.config.from_pyfile('config.py')
 from main import db,create_app
+
 app=create_app()
 db.init_app(app)
 manager = Manager(app)

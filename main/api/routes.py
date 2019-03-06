@@ -4,13 +4,12 @@
 @author: qkyzs
 @license: (C) Copyright 2017-2018, Node Supply Chain Manager Corporation Limited.
 @contact: nepu1960@yeah.net
-@file: run.py
-@time: 2019/2/25 0025 09:28
+@file: routes.py
+@time: 2019/3/6 0006 15:07
 @desc:
 """
-from main import create_app
+from . import api
 
-app=create_app()
-
-if __name__ == '__main__':
-    app.run()
+@api.route('/')
+def login():
+    return 'yes'
