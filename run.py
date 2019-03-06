@@ -8,7 +8,7 @@
 @time: 2019/2/25 0025 09:28
 @desc:
 """
-from api import creat_app
+from main import creat_app
 app=creat_app()
 if __name__ == '__main__':
     app.run()
