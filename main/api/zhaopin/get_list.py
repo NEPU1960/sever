@@ -10,7 +10,8 @@
 '''
 import requests
 from bs4 import BeautifulSoup
-from main import celery
+from main import create_app,make_celery
+celery=make_celery(create_app())
 data= {
         'scriptSessionId': '35414762109FC07BB0EC446FA567A77F4',
          'httpSessionId':'F1A4135632421280FA27A0B87F80F8E8',
@@ -28,7 +29,7 @@ data= {
         'c0-param6': 'null:null',
         'batchId': '0'
         }
-#@celery.task
+@celery.task
 def nepu_news():
     headers = {
         'Accept': '*/*',

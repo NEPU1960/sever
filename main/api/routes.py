@@ -14,14 +14,15 @@ from flask import request
 from main.pyJWT import  verify_bearer_token
 from main.api.zhaopin.get_list import nepu_news
 from main import create_app
+from flask import request,jsonify
+import json
 
 app=create_app()
 
-@app.route('/')
+@api.route('/')
 def hello_world():
     return 'Hello World!'
 @api.route('/news')
 def get_news_list():
     c=nepu_news()
-    print(c)
-    return nepu_news()
+    return jsonify(c)
