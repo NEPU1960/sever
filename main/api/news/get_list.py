@@ -83,6 +83,6 @@ def nepu_news():
             get_title.append(title_list)
         print(get_title)
 
-
-nepu_news()
+if __name__ == '__main__':
+    nepu_news()
 

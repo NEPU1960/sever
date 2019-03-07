@@ -8,11 +8,11 @@
 @time: 2019/3/4 0004 14:19
 @desc:空教室查询，详细信息需完善，暂不启用详细信息功能
 """
-from main.api2.jwc import login_jwc,logout
+from main.api.jwc import login_jwc,logout
 from bs4 import BeautifulSoup
 import re
 import time
-from main.api2.jwc import today_week
+from main.api.jwc import today_week
 header={
     'Accept':'application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*',
     'User-Agent':'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; InfoPath.2)',

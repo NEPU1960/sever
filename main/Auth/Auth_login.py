@@ -8,11 +8,11 @@
 @time: 2019/3/7 0007 08:43
 @desc:
 """
-from main.api2.jwc.jwc_login import login_jwc,logout
-from main.api2.jwc.get_info import info
-from main.api2.library.login import library_login
-from main.api2.ecard.login import ecard_login
-from main.api2.yjs.login import get_login,get_info
+from main.api.jwc.jwc_login import login_jwc,logout
+from main.api.jwc.get_info import info
+from main.api.library.login import library_login
+from main.api.ecard.login import ecard_login
+from main.api.yjs.login import get_login,get_info
 from main.comman import falseReturn,trueReturn
 def auth(xh,pwd):
     if xh[2:4]=='80':#判断是否是研究生

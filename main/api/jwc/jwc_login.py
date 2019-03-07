@@ -11,7 +11,7 @@
 import requests
 from PIL import Image
 from io import BytesIO
-from main.api2.jwc.yzm.getcode import get_validate_code_from_image
+from main.api.jwc.yzm.getcode import get_validate_code_from_image
 from main.comman import trueReturn,falseReturn
 
 login = requests.session()

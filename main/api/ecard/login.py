@@ -9,7 +9,7 @@
 @desc:
 """
 import requests
-from main.api2.ecard.get_password import get_pay_keyboard_number_location
+from main.api.ecard.get_password import get_pay_keyboard_number_location
 from bs4 import BeautifulSoup
 global session
 import re
