@@ -13,15 +13,14 @@ import requests
 from flask import request
 from main.pyJWT import  verify_bearer_token
 from main.api.zhaopin.get_list import nepu_news
+from main import create_app
 
-@api.route('/',)
-def login():
-    # te=request.headers.get('Authorization')
-    # print(te)
-    # c=verify_bearer_token(te[7:])
-    # print(c)
-    return 'yes'
-@api.route('/zhaopin')
+app=create_app()
+
+@app.route('/')
+def hello_world():
+    return 'Hello World!'
+@api.route('/news')
 def get_news_list():
     c=nepu_news()
     print(c)

@@ -28,7 +28,7 @@ data= {
         'c0-param6': 'null:null',
         'batchId': '0'
         }
-@celery.task
+#@celery.task
 def nepu_news():
     headers = {
         'Accept': '*/*',
