@@ -1,7 +1,7 @@
 # coding: utf-8
 import os
-from main.api2.jwc.yzm.learn import get_classifier_from_learn
-from main.api2.jwc.yzm.common import *
+from main.api.jwc.yzm.learn import get_classifier_from_learn
+from main.api.jwc.yzm.common import *
 
 
 def get_validate_code_from_image(img):

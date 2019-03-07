@@ -11,7 +11,9 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-from main.api2.yjs.jx import get_list
+from main.api.yjs.jx import get_list
+from main import create_app,make_celery
+celery=make_celery(create_app())
 session=requests.session()
 header={
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
@@ -37,6 +39,7 @@ def get_login(xh,pwd):
         return '学号或密码错误'
     else:
         return session
+@celery.task
 def get_info(xh):
     '''获取个人信息'''
     url='http://172.16.199.2:8008/yjsjwgl/xsxxwh.do?method=xsgrxxwh'
@@ -52,6 +55,7 @@ def get_info(xh):
         'zjhm':zjhm
     }
     print(name,zjhm)
+@celery.task
 def get_score(xn='',xq=''):
     '''成绩获取'''
     url='http://172.16.199.2:8008/yjsjwgl/xscjcx.do?act=find'
@@ -79,6 +83,7 @@ def get_score(xn='',xq=''):
             }
             score.append(score_info)
     print(score)
+@celery.task
 def get_class(xn=2018-2019,xq=1):
     '''课表获取'''
 

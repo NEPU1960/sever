@@ -11,6 +11,9 @@
 import requests
 import re
 from bs4 import BeautifulSoup
+from main import create_app,make_celery
+celery=make_celery(create_app())
+@celery.task
 def get_name_book():
     '''图书检索'''
     session=requests.session()

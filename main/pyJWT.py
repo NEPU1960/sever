@@ -10,6 +10,7 @@
 """
 import jwt
 import time
+from flask import request
 
 
 # 使用 sanic 作为restful api 框架
@@ -28,14 +29,21 @@ def create_token(IDnumber,status):
     return token
 
 
-def verify_bearer_token(token):
+def verify_bearer_token(token,func):
     #  如果在生成token的时候使用了aud参数，那么校验的时候也需要添加此参数
-
-
+    te = request.headers.get('Authorization')
+    print(te)
+    c = verify_bearer_token(te[7:])
+    print(c)
     try:
         payload = jwt.decode(token, 'secret', audience='qkyzs', algorithms=['HS256'])
         if payload:
-            return payload
+            #
+            def inner(*args, **kwargs):
+                result = func(*args, **kwargs)
+                return result
+
+            return inner
         else:
             raise jwt.InvalidTokenError
 

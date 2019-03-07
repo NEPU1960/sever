@@ -1,31 +1,15 @@
-#!/usr/bin/python
-# -*- coding:utf-8 -*-:
-'''
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+"""
 @author: qkyzs
 @license: (C) Copyright 2017-2018, Node Supply Chain Manager Corporation Limited.
 @contact: nepu1960@yeah.net
-@file: wechat_get.py
-@time: 2019/1/26 23:13
+@file: queue.py
+@time: 2019/3/7 0007 14:22
 @desc:
-'''
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-import os
-from .config import shuju
+"""
 from celery import Celery
-from redis import Redis
 
-db=SQLAlchemy()
-redis=Redis(host='127.0.0.1',port=6379,db=10)
-
-def create_app():
-    app=Flask(__name__)
-    app.config.from_object(shuju)
-    shuju.init_app(app)
-    db.init_app(app)
-    from .api import api
-    app.register_blueprint(api,url_prefix='/api')
-    return app
 def make_celery(app):
     """
     integrate Celery with Flask
@@ -43,5 +27,3 @@ def make_celery(app):
                 return TaskBase.__call__(self, *args, **kwargs)
     celery.Task = ContextTask
     return celery
-
-
