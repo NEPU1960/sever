@@ -12,11 +12,11 @@ import requests
 from bs4 import BeautifulSoup
 import datetime
 session=requests.session()
-def library_login():
+def library_login(xh,pwd='0000'):
     '''图书馆登陆'''
     login_data={
-        'dztm':'188002070322',
-         'dzmm':'0000'
+        'dztm':xh,
+         'dzmm':pwd
     }
     is_success=session.post('http://210.46.140.21:8080/opac/dzjsjg.jsp',data=login_data)#图书馆登陆
     if is_success.status_code==200:
@@ -55,11 +55,11 @@ def library_login():
     else:
         return 400
 
-def extend_booke():
+def extend_booke(xh,dctm):
     '''图书续借'''
     extend_data={
-        'dztm':'188002070322',
-        'dctm':'01407850'
+        'dztm':xh,
+        'dctm':dctm
     }
     back_message=session.post('http://210.46.140.21:8080/opac/dzxj.jsp',data=extend_data).text
     if 'success' in back_message:
@@ -67,6 +67,6 @@ def extend_booke():
     else:print(back_message)
 def logout_library():
     session.post('http://210.46.140.21:8080/opac/dztc.jsp')
-library_login()
-extend_booke()
-logout_library()
+if __name__ == '__main__':
+    library_login('178003070655')
+    logout_library()

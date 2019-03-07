@@ -12,6 +12,7 @@ import requests
 from PIL import Image
 from io import BytesIO
 from main.api2.jwc.yzm.getcode import get_validate_code_from_image
+from main.comman import trueReturn,falseReturn
 
 login = requests.session()
 session = login.get('http://jwgl.nepu.edu.cn')
@@ -39,12 +40,12 @@ def login_jwc(username,pwd):
         if "验证码错误!!" in success.text:
             login_jwc()
         elif '该帐号不存在或密码错误,请联系管理员' in success.text:
-            return '学号或密码输入错误'
+            return falseReturn(msg='学号不存在或密码错误')
         else:
             login.get('http://jwgl.nepu.edu.cn/Logon.do?method=logonBySSO',headers=header)
-        return login
+        return trueReturn(data=login)
     else:
-        return {'msg':404}
+        return falseReturn(msg='教务系统暂时无法访问')
 
 def logout():
     '''登出教务系统'''

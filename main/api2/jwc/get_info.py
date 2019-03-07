@@ -22,10 +22,10 @@ def info(login):
     get_info = login.get(url).text
     soup=BeautifulSoup(get_info,'lxml')
     detailed_info=soup.find_all('tr')
-    print(detailed_info)
+    # print(detailed_info)
     info=detailed_info[4].find_all('td')
     IDcard = detailed_info[-2].find_all('td')
-    print(IDcard)
+    # print(IDcard)
     IDnumber=IDcard[3].get_text('','\xa0')
 
     yuanxi=info[0].get_text()[3:]
@@ -46,10 +46,10 @@ def info(login):
         '身份证':IDnumber,
         '毕业日期':'20'+year
     }
-    print(xinxi)
+    # print(xinxi)
     get_info_picture = login.get("http://jwgl.nepu.edu.cn/uploadfile/studentphoto/pic/{}.JPG".format(xuehao),headers=header)
     with open(xuehao+'.jpg', 'wb')as f:
         f.write(get_info_picture.content)
-    return (xinxi)
+    return xinxi
 if __name__ == '__main__':
     info()
