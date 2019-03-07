@@ -22,6 +22,7 @@ def auth(xh,pwd):
         else:
             back=get_info(xh)
         print(back)
+
     else:
         login=login_jwc(xh,pwd)
         if login['status']==False:
