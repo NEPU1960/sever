@@ -1,6 +1,6 @@
 # coding: utf-8
 import os
-from main.api2.jwc import get_classifier_from_learn
+from main.api2.jwc.yzm.learn import get_classifier_from_learn
 from main.api2.jwc.yzm.common import *
 
 
@@ -28,6 +28,6 @@ def test(sourse):
 	print("正确率:"+str(float(right/num)))   #输出准确率
 if __name__ == '__main__':
     # test("images")
-    img = Image.open("71.png")
+    img = Image.open("3cmb.png")
     code = get_validate_code_from_image(img)
     print(code)

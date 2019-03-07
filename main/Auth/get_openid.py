@@ -17,13 +17,9 @@ def openid():
     url='https://api.weixin.qq.com/sns/jscode2session?appid='+appid+'&secret='+secret+'&js_code='+JSCODE+'&grant_type=authorization_code'
     code2Session=requests.get(url).json()
     print(code2Session)
-    # if 'errcode' in code2Session.keys():
-    #     print('1')
-    # else:
-    #     openid=code2Session['openid']
-    #     session_key=code2Session['session_key']
-    #     print(openid,session_key)
-    #
-    # print(code2Session)
+    if 'errcode' in code2Session.keys():
+       return {'msg':code2Session['errcode']}
+    else:
+         print(code2Session)
 if __name__ == '__main__':
     openid()

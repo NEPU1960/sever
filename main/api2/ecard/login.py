@@ -9,15 +9,15 @@
 @desc:
 """
 import requests
-from main.api2.ecard.get_password import get_pay_keyboard_number_location
+from main.api2.ecard.get_pwd.get_password import get_pay_keyboard_number_location
 from bs4 import BeautifulSoup
 global session
 from requests.auth import HTTPDigestAuth
 import re
+from PIL import Image
+from io import BytesIO
 
 session=requests.session()
-session.auth=HTTPDigestAuth("178003070655", "032050")
-
 
 def get_re_url( r):
     # 操作正在进行获取查询url
@@ -27,7 +27,7 @@ def get_re_url( r):
     url = exp.findall(str(con))[0]
     return url
 
-def login():
+def ecard_login(xh,pwd):
     header = {
         'Content - Type': 'application / x - www - form - urlencoded',
         'Connection': 'Keep-Alive',
@@ -39,14 +39,13 @@ def login():
     session.get('http://yikatong.nepu.edu.cn/homeLogin.action')
     session.get('http://yikatong.nepu.edu.cn/getCheckpic.action?rand=8888.197958871872')
     url = 'http://yikatong.nepu.edu.cn/getpasswdPhoto.action'
-    pwd=session.get(url)
-    with open('im.jpg','wb') as f:
-        f.write(pwd.content)
-    new_pwd=get_pay_keyboard_number_location('im.jpg','032050')
+    pw = requests.get(url)
+    im = Image.open(BytesIO(pw.content))
+    new_pwd = get_pay_keyboard_number_location(im, pwd)
     data={
         "imageField.x": "20",
         "imageField.y": "12",
-        'name':'178003070655',
+        'name':xh,
         'userType':'1',
         'passwd':new_pwd,
          'loginType':'2',
@@ -162,5 +161,7 @@ def login():
         #     '上次过渡余额':c[5:-2],
         # }
         # print(yue)
+        return 'yes'
 
-login()
+if __name__ == '__main__':
+    ecard_login('178003070655','032050')

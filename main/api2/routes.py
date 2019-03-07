@@ -18,5 +18,4 @@ def login():
     JSCODE=''
     url='https://api.weixin.qq.com/sns/jscode2session?appid='+appid+'&secret='+secret+'&js_code=JSCODE&grant_type=authorization_code'
     code2Session=requests.get(url).text
-
     return 'yes'

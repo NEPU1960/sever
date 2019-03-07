@@ -38,7 +38,7 @@ def get_classifier_from_learn():
     if not clf:
         clf = svm.SVC(kernel='linear')  #线性准确率高一点
         #clf = svm.SVC()   #默认为rbf
-        X, Y = get_image_fit_data("labeled_images")
+        X, Y = get_image_fit_data("C:/Users/Administrator.SKY-20170908FNB/PycharmProjects/sever/main/api2/jwc/yzm/labeled_images")
         clf.fit(X, Y)
         print("学习用了"+str(time.time()-t)+"s")
     return clf      #学习到的矩阵
@@ -47,8 +47,6 @@ def get_classifier_from_learn():
 def main():
     clf = get_classifier_from_learn()
     print(type(clf))
-
-
 
 if __name__ == '__main__':
     main()

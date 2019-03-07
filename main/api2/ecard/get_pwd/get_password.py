@@ -39,7 +39,7 @@ def get_pay_keyboard_number_location(im, pwd):
     templates = {}
     positions = {}
     lie={}
-    nimgpath ='./get_pwd' # 数字图片不在同目录时使用
+    nimgpath ='' # 数字图片不在同目录时使用
     for i in numbers:
         templates[i] = os.path.join(nimgpath, "{}.png".format(i))
     #img_rgb = cv2.imread(im)
@@ -72,8 +72,6 @@ def get_pay_keyboard_number_location(im, pwd):
 if __name__ == "__main__":
     url='http://yikatong.nepu.edu.cn/getpasswdPhoto.action'
     pw=requests.get(url)
-    with open ('im.png','wb') as f:
-        f.write(pw.content)
     im = Image.open(BytesIO(pw.content))
     ls = get_pay_keyboard_number_location(im, '1234567890')
     print(ls)
