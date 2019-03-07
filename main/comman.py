@@ -9,7 +9,7 @@
 @desc:
 '''
 
-def trueReturn(data, msg):
+def trueReturn(msg='',data=''):
     return {
         "status": True,
         "data": data,
@@ -17,7 +17,7 @@ def trueReturn(data, msg):
     }
 
 
-def falseReturn(data, msg):
+def falseReturn(msg='',data=''):
     return {
         "status": False,
         "data": data,

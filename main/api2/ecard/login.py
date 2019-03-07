@@ -9,10 +9,9 @@
 @desc:
 """
 import requests
-from main.api2.ecard.get_pwd.get_password import get_pay_keyboard_number_location
+from main.api2.ecard.get_password import get_pay_keyboard_number_location
 from bs4 import BeautifulSoup
 global session
-from requests.auth import HTTPDigestAuth
 import re
 from PIL import Image
 from io import BytesIO
@@ -42,6 +41,7 @@ def ecard_login(xh,pwd):
     pw = requests.get(url)
     im = Image.open(BytesIO(pw.content))
     new_pwd = get_pay_keyboard_number_location(im, pwd)
+    print(new_pwd)
     data={
         "imageField.x": "20",
         "imageField.y": "12",
@@ -52,6 +52,7 @@ def ecard_login(xh,pwd):
         'rand':'8888'
     }
     back_info=session.post('http://yikatong.nepu.edu.cn/loginstudent.action',data=data,headers=header)
+    print(back_info.content)
     if '登陆失败，密码错误' in back_info:
         return '密码输入错误'
     elif '登陆失败，无此用户名称！' in back_info:
@@ -141,27 +142,8 @@ def ecard_login(xh,pwd):
             zhangdan.append(info)  # 总消费记录
         print(zhangdan)
 
-
-        # '''获取用户信息、账号'''
-        # user_info=session.get('http://yikatong.nepu.edu.cn/accountcardUser.action').text
-        # soup=BeautifulSoup(user_info,'lxml')
-        # te=soup.find_all('table')
-        # number=soup.find_all('div')
-        # user_number=number[4].string#一卡通账号获取
-        # print(user_number)
-        # for i in te[1:2]:
-        #     tr=i.find_all('td')
-        #     te=tr[-5].string
-        # a = re.search('.+(卡)', te).group()
-        # b = re.search('(额).+(当)', te).group()
-        # c = re.search('(过渡余额).+(上)', te).group()
-        # yue={
-        #     '卡余额':a[:-2],
-        #     '当前过渡余额':b[2:-2],
-        #     '上次过渡余额':c[5:-2],
-        # }
-        # print(yue)
         return 'yes'
 
 if __name__ == '__main__':
-    ecard_login('178003070655','032050')
+    c=ecard_login('178003070655','032050')
+    print(c)

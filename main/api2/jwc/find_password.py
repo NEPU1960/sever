@@ -8,6 +8,7 @@
 @time: 2019/3/4 0004 19:45
 @desc:
 """
+from main.comman import trueReturn,falseReturn
 import requests
 def find_jwc_pwd():
     '''教务处密码找回'''
@@ -25,14 +26,15 @@ def find_jwc_pwd():
     info=session.post('http://jwgl.nepu.edu.cn/yhxigl.do?method=resetPasswd',data2)
     if info.status_code==200:
         if '出错页面' in info.text:
-            return {'msg': '学号输入错误'}
+            return falseReturn(msg='学号输入错误')
         elif '身份证件号输入错误或者你在系统中没有身份证号' in info.text:
-            return {'msg': '身份证号输入错误'}
+            return falseReturn(msg='身份证号输入错误')
         else:
             print(info.text)
-            return {'msg':'密码已重置为身份证后六位'}
+            return trueReturn(msg='密码已重置为身份证后六位')
     else:
-        return {'msg':404}
+        return falseReturn(msg='系统暂时无法访问，请稍后再试')
 if __name__ == '__main__':
 
-    find_jwc_pwd()
+    back=find_jwc_pwd()
+    print(back)
