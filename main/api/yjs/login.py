@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 import re
 from main.api.yjs.jx import get_list
 from main import create_app,make_celery
+from ...comman import falseReturn,trueReturn
 celery=make_celery(create_app())
 session=requests.session()
 header={
@@ -30,15 +31,18 @@ def get_login(xh,pwd):
     }
 
     url='http://172.16.199.2:8008/yjsjwgl/login.do'
+    try:
 
-    back_info=session.post(url,data=data,headers=header)
-    if back_info.status_code!=200:
-        return 404
-    elif '用户名或密码不正确' in back_info.text:
+        back_info=session.post(url,data=data,headers=header,timeout=(3.05, 5))
+        if back_info.status_code!=200:
+            return falseReturn(msg='系统暂时不能访问')
+        elif '用户名或密码不正确' in back_info.text:
 
-        return '学号或密码错误'
-    else:
-        return session
+            return falseReturn(msg='学号或密码错误')
+        else:
+            return trueReturn(msg='100',data=session)
+    except requests.exceptions.RequestException:
+        return falseReturn(msg="连接超时")
 @celery.task
 def get_info(xh):
     '''获取个人信息'''

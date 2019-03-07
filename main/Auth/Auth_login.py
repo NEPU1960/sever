@@ -16,8 +16,11 @@ from main.api.yjs.login import get_login,get_info
 from main.comman import falseReturn,trueReturn
 def auth(xh,pwd):
     if xh[2:4]=='80':#判断是否是研究生
-        login=get_login(xh,pwd)
-        back=get_info(xh)
+        login_info=get_login(xh,pwd)
+        if login_info['msg']!='100':
+            return login_info
+        else:
+            back=get_info(xh)
         print(back)
     else:
         login=login_jwc(xh,pwd)
@@ -32,8 +35,8 @@ def auth(xh,pwd):
                 ecard_pwd=sfz[-7:-2] #一卡通密码获取
             else:
                 ecard_pwd=sfz[-6:-2]
-            # name=ecard_login(xh,ecard_pwd)
-            #     # print
+            name=ecard_login(xh,ecard_pwd)
+            print(name)
     back=library_login(xh)
     print(back)
 
