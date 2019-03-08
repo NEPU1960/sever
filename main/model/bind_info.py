@@ -18,10 +18,6 @@ class bind_info(db.Model):
     ecard_pwd=db.Column(db.String(20),nullable=True)
     library_pwd=db.Column(db.String(20),nullable=True)
     student_info=db.Column(db.String(20),nullable=False)
-
-
-
-
     def __init__(self, studentid,jw_pwd,ecard_pwd,library_pwd,student_info):
         self.studentid = studentid
         self.jw_pwd=jw_pwd
