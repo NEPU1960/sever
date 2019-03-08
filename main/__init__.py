@@ -28,6 +28,7 @@ def create_app():
     from .Auth import Auth
     app.register_blueprint(Auth,url_prefix='/auth')
     return app
+
 def make_celery(app):
     """
     integrate Celery with Flask
@@ -45,5 +46,5 @@ def make_celery(app):
                 return TaskBase.__call__(self, *args, **kwargs)
     celery.Task = ContextTask
     return celery
-
+celery=make_celery(create_app())
 

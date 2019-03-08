@@ -10,6 +10,7 @@
 """
 from bs4 import BeautifulSoup
 from main import create_app,make_celery
+from main.comman import trueReturn
 import time
 celery=make_celery(create_app())
 header={

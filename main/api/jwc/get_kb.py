@@ -43,11 +43,11 @@ def get_kb(login,username,xnxqh='2018-2019-2'):
                         info={
                             '星期':week,
                             '节次':jieci,
-                            '课程':None,
-                            '教师':None,
-                            '教室':None,
-                            '周次':None,
-                            '班级':None,
+                            '课程':'',
+                            '教师':'',
+                            '教室':'',
+                            '周次':'',
+                            '班级':'',
                         }
                         total.append(info)
                     else:

@@ -86,9 +86,9 @@ def get_score(xn='',xq=''):
                 '正考成绩':td[5].get_text('','\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t'),
             }
             score.append(score_info)
-    print(score)
+    return score
 @celery.task
-def get_class(xn=2018-2019,xq=1):
+def get_class(xn=2017-2018,xq=1):
     '''课表获取'''
 
     data={
@@ -109,7 +109,6 @@ def get_class(xn=2018-2019,xq=1):
             te=fen.split('/')
             # print(te)
             for i in te:
-                print(i)
                 week = re.search('周.', i).group()
 
                 jc = re.search('[0-9].*节', i).group()
@@ -126,7 +125,7 @@ def get_class(xn=2018-2019,xq=1):
                     'zhouci':get_list(zhouci[1:-2]),
                 }
                 list.append(info_class)
-    print(list)
+    return list
 if __name__ == '__main__':
 
     get_login()
