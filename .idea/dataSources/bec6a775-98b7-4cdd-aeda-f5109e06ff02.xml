@@ -822,7 +822,7 @@
     </key>
     <column id="209" parent="202" name="studentid">
       <Position>1</Position>
-      <DataType>varchar(32)|0s</DataType>
+      <DataType>varchar(20)|0s</DataType>
       <NotNull>1</NotNull>
       <ColumnKind>normal</ColumnKind>
     </column>
@@ -843,8 +843,7 @@
     </column>
     <column id="213" parent="202" name="student_info">
       <Position>5</Position>
-      <DataType>varchar(20)|0s</DataType>
-      <NotNull>1</NotNull>
+      <DataType>text|0s</DataType>
       <ColumnKind>normal</ColumnKind>
     </column>
     <index id="214" parent="202" name="studentid">

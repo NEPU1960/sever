@@ -25,6 +25,8 @@ def create_app():
     db.init_app(app)
     from .api import api
     app.register_blueprint(api,url_prefix='/api')
+    from .Auth import Auth
+    app.register_blueprint(Auth,url_prefix='/auth')
     return app
 def make_celery(app):
     """

@@ -56,9 +56,9 @@ def get_info(xh):
     info={
         'xh':xh,
         'name':name,
-        'zjhm':zjhm
+        '身份证':zjhm
     }
-    print(name,zjhm)
+    return info
 @celery.task
 def get_score(xn='',xq=''):
     '''成绩获取'''

@@ -16,3 +16,19 @@ from .jw_info import jw_info
 from .library_info import library_info
 from .openid_info import openid_info
 
+def add_jw_pwd(studentid,jw_pwd,ecard_pwd='',library_pwd='',student_info=''):
+    studentid=bind_info.query.filter_by(studentid=studentid).first()
+    if not studentid:
+        pwd_info=bind_info(studentid=studentid,
+                              jw_pwd=jw_pwd,
+                           ecard_pwd=ecard_pwd,
+                              library_pwd=library_pwd,
+                           student_info=student_info)
+        pwd_info.save()
+    else:
+        studentid.jw_pwd=jw_pwd
+        studentid.update()
+
+
+
+
