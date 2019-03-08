@@ -10,8 +10,7 @@
 '''
 import re
 import copy
-from main import create_app,make_celery
-celery=make_celery(create_app())
+from main import celery
 @celery.task
 def get_list(new):
     # te=re.search('÷‹.*',c).group()

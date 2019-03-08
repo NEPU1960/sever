@@ -15,17 +15,11 @@ global session
 import re
 from PIL import Image
 from io import BytesIO
-
+from ... import celery
 
 session=requests.session()
 
-def get_re_url( r):
-    # 操作正在进行获取查询url
-    soup = BeautifulSoup(''.join(r.text))
-    con = soup.find_all("form")[0]
-    exp = re.compile('action="(.*)"\sid')
-    url = exp.findall(str(con))[0]
-    return url
+
 
 def ecard_login(xh,pwd):
     header = {
@@ -35,14 +29,14 @@ def ecard_login(xh,pwd):
         'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; InfoPath.2)',
         'Accept':	'application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*'
     }
-
-    session.get('http://yikatong.nepu.edu.cn/homeLogin.action')
-    session.get('http://yikatong.nepu.edu.cn/getCheckpic.action?rand=8888.197958871872')
-    url = 'http://yikatong.nepu.edu.cn/getpasswdPhoto.action'
-    pw = requests.get(url)
+    url = 'http://yikatong.nepu.edu.cn/'
+    session.get(url+'homeLogin.action')
+    session.get(url+'getCheckpic.action?rand=8888.197958871872')
+    get_pass_url = 'http://yikatong.nepu.edu.cn/getpasswdPhoto.action'
+    pw = requests.get(get_pass_url)
     im = Image.open(BytesIO(pw.content))
     new_pwd = get_pay_keyboard_number_location(im, pwd)
-    print(new_pwd)
+    #print(new_pwd)
     data={
         "imageField.x": "20",
         "imageField.y": "12",
@@ -54,7 +48,7 @@ def ecard_login(xh,pwd):
     }
     try:
         back_info=session.post('http://yikatong.nepu.edu.cn/loginstudent.action',data=data,headers=header, timeout=(3.05, 5))
-        print(back_info.content)
+        #print(back_info.content)
         if '登陆失败，密码错误' in back_info:
             return '密码输入错误'
         elif '登陆失败，无此用户名称！' in back_info:

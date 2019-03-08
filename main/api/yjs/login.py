@@ -12,9 +12,8 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from main.api.yjs.jx import get_list
-from main import create_app,make_celery
+from main import celery
 from ...comman import falseReturn,trueReturn
-celery=make_celery(create_app())
 session=requests.session()
 header={
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',

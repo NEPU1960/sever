@@ -13,8 +13,7 @@ from bs4 import BeautifulSoup
 import datetime
 from main.comman import trueReturn,falseReturn
 session=requests.session()
-from main import make_celery,create_app
-celery=make_celery(create_app())
+from main import celery
 @celery.task
 def library_login(xh,pwd='0000'):
     '''图书馆登陆'''

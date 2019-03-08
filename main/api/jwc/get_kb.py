@@ -10,8 +10,7 @@
 """
 from bs4 import BeautifulSoup
 from main.api.jwc.zhouchuli import get_zhou_list
-from main import create_app,make_celery
-celery=make_celery(create_app())
+from main import celery
 header={
     'Accept':'application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*',
     'User-Agent':'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; InfoPath.2)',
