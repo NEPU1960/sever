@@ -35,3 +35,8 @@ class shuju():
             'schedule': crontab(minute=0, hour='9')
         }
     }
+    #AES配置
+    JWC_PASSWORD_SECRET_KEY='zhmsn5211314nepu'
+    ECARD_PASSWORD_SECRET_KEY = 'zhmsn5211314nepu'
+    LIBRRARY_PASSWORD_SECRET_KEY = 'zhmsn5211314nepu'
+    IDCARD_PASSWORD_SECRET_KEY = 'zhmsn5211314nepu'

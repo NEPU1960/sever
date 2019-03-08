@@ -9,13 +9,13 @@
 @desc:
 '''
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
+
 import os
 from .config import shuju
 from celery import Celery
 from redis import Redis
+from main.model import db
 
-db=SQLAlchemy()
 redis=Redis(host='127.0.0.1',port=6379,db=10)
 
 def create_app():

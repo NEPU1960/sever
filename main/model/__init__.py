@@ -9,7 +9,9 @@
 @desc:
 """
 from flask_sqlalchemy import SQLAlchemy
-from main import create_app
-app=create_app()
-
-db=SQLAlchemy(app)
+db=SQLAlchemy()
+from .bind_info import bind_info
+from .ecard_info import ecard_info
+from .jw_info import jw_info
+from .library_info import library_info
+from .openid_info import openid_info
