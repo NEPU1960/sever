@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 import datetime
 from main.comman import trueReturn,falseReturn
 session=requests.session()
-from main import celery
+from ..queue import celery
 @celery.task
 def library_login(xh,pwd='0000'):
     '''图书馆登陆'''

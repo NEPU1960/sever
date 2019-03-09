@@ -12,7 +12,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from main.api.yjs.jx import get_list
-from main import celery
+from ..queue import celery
 from ...comman import falseReturn,trueReturn
 session=requests.session()
 header={

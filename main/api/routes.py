@@ -19,6 +19,7 @@ from ..Auth.get_openid import openid
 from ..pyJWT import verify_bearer_token
 import json
 from ..comman import falseReturn,trueReturn
+from .library.search_book import get_name_book,get_info
 
 app=create_app()
 
@@ -37,3 +38,15 @@ def get_news_list():
     c=verify_bearer_token(te)
     print(c)
     return '1'
+@api.route('/library/search',methods=['POST'])
+def search_library():
+    book_name=request.get_json()['book_name']
+    page=request.get_json()['page']
+    shearch_result=get_name_book(book_name,page)
+    return jsonify(shearch_result)
+@api.route('/library/get_search_info',methods=['POST'])
+def book_info():
+    book_url=request.get_json()['herf']
+    book_info=get_info(book_url)
+    return jsonify(book_info)
+

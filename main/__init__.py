@@ -18,6 +18,7 @@ from main.model import db
 
 redis=Redis(host='127.0.0.1',port=6379,db=10)
 
+
 def create_app():
     app=Flask(__name__)
     app.config.from_object(shuju)
@@ -46,5 +47,5 @@ def make_celery(app):
                 return TaskBase.__call__(self, *args, **kwargs)
     celery.Task = ContextTask
     return celery
-celery=make_celery(create_app())
+
 

@@ -10,7 +10,7 @@
 '''
 from bs4 import BeautifulSoup
 import time
-from main import celery
+from ..queue import celery
 
 header={
     'Accept':'application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*',

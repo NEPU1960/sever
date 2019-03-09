@@ -11,9 +11,9 @@
 import requests
 import re
 from bs4 import BeautifulSoup
-from main import celery
+from ..queue import celery
 @celery.task
-def get_name_book():
+def get_name_book(book_name,page):
     '''图书检索'''
     session=requests.session()
     header = {
@@ -24,7 +24,7 @@ def get_name_book():
         'Accept-Language': 'zh-CN,zh;q=0.9'
     }
     session.get('http://210.46.140.21:8080/opac/',headers=header)
-    jsc='新媒体'.encode('gb2312')
+    jsc=book_name.encode('gb2312')
     sort='kdm desc,datestr'.encode('gb2312')
     get_data={
         'ifface':'true',
@@ -32,7 +32,8 @@ def get_name_book():
         'jstj':'title',
         'sort':sort,
         'orderby':'desc',#排序方式
-        'geshi':'bgfm'
+        'geshi':'bgfm',
+        'page':page
     }
     data={
     'page':'1',
@@ -76,6 +77,7 @@ def get_name_book():
                 }
             result.append(info_book)
         except:pass
+    return result
 
 def get_info(url):
     '''获取图书详细信息'''
@@ -103,10 +105,9 @@ def get_info(url):
             '摘要':info_6
 
         }
-        print(extend_info)
+    return extend_info
 
 
 
 if __name__ == '__main__':
-
-    get_info('http://210.46.140.21:8080/opac/ckgc.jsp?kzh=zyk0455217')
+    get_name_book('新媒体')

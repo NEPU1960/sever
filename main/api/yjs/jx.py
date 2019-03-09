@@ -10,7 +10,7 @@
 '''
 import re
 import copy
-from main import celery
+from ..queue import celery
 @celery.task
 def get_list(new):
     # te=re.search('÷‹.*',c).group()
