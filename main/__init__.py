@@ -18,6 +18,7 @@ from main.model import db
 
 redis=Redis(host='127.0.0.1',port=6379,db=10)
 
+
 def create_app():
     app=Flask(__name__)
     app.config.from_object(shuju)
@@ -25,7 +26,10 @@ def create_app():
     db.init_app(app)
     from .api import api
     app.register_blueprint(api,url_prefix='/api')
+    from .Auth import Auth
+    app.register_blueprint(Auth,url_prefix='/auth')
     return app
+
 def make_celery(app):
     """
     integrate Celery with Flask

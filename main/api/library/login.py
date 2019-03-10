@@ -11,7 +11,10 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime
+from main.comman import trueReturn,falseReturn
 session=requests.session()
+from ..queue import celery
+@celery.task
 def library_login(xh,pwd='0000'):
     '''图书馆登陆'''
     login_data={
@@ -46,14 +49,15 @@ def library_login(xh,pwd='0000'):
                 num = (date1 - date2).days
                 i[13] = num
                 back_list.append(i)
+            return trueReturn(data=back_list)
         elif '读者密码错误！请重新输入！' in is_success:
             print('读者密码错误！请重新输入！')
-            return '登陆失败'
+            return falseReturn(msg='密码错误')
         else:
             print('读者条码号不存在！请重新输入！')
-            return '登陆失败'
+            return falseReturn(msg='学号错误')
     else:
-        return 400
+        return falseReturn(msg='系统暂时访问失败')
 
 def extend_booke(xh,dctm):
     '''图书续借'''

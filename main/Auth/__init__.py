@@ -8,3 +8,6 @@
 @time: 2019/3/6 0006 19:37
 @desc:
 """
+from flask import Blueprint
+Auth=Blueprint('Auth',__name__)
+from .Auth_login import *
