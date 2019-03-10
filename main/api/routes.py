@@ -35,7 +35,6 @@ def hello_world():
     if back['status']==False:
         return jsonify(falseReturn(msg='非法访问'))
     else:
-
         return 'Hello World!'
 @api.route('/news/jwc_login')
 def get_news_list():
@@ -58,6 +57,7 @@ def book_info():
     return jsonify(trueReturn(book_info))
 @api.route('jwc/score_updata',methods=['GET'])
 def score_updata():
+    '''更新成绩'''
     xh='130101140323'
     pwd_info=get_pwd(xh)
     jw_pwd=pwd_info['jw']
@@ -74,6 +74,7 @@ def score_updata():
 
 @api.route('jwc/kb_updata',methods=['GET'])
 def kb_updata():
+    '''更新课表'''
     xh='130101140323'
     pwd_info=get_pwd(xh)
     jw_pwd=pwd_info['jw']
@@ -89,6 +90,7 @@ def kb_updata():
     return jsonify(trueReturn(data=back))
 @api.route('kong',methods=['GET'])
 def kjs():
+    '''空教室查询'''
     back=te()
     return jsonify(back)
 
