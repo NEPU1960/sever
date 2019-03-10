@@ -14,10 +14,11 @@ def today_week():
     '''获取当前星期、周数'''
     week=time.localtime()
     get_week=time.strftime("%w",week)#星期
+    if get_week=='0':
+        get_week='7'
     st=datetime.datetime.strptime('2019-03-04', "%Y-%m-%d")#开学日期
     en=datetime.datetime.now()
     jg=(en-st).days#日期间隔
-
     zhou=int(jg/7+1)
     return {'week':get_week,'zhou':zhou}
 if __name__ == '__main__':

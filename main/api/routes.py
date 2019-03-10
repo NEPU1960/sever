@@ -20,6 +20,11 @@ from ..pyJWT import verify_bearer_token
 import json
 from ..comman import falseReturn,trueReturn
 from .library.search_book import get_name_book,get_info
+from ..model import get_pwd
+from .jwc.jwc_login import login_jwc,logout
+from .jwc.score import socer
+from .jwc.get_kb import get_kb
+from .jwc.classroom import te
 
 app=create_app()
 
@@ -40,13 +45,51 @@ def get_news_list():
     return '1'
 @api.route('/library/search',methods=['POST'])
 def search_library():
+    '''图书馆检索'''
     book_name=request.get_json()['book_name']
     page=request.get_json()['page']
     shearch_result=get_name_book(book_name,page)
-    return jsonify(shearch_result)
+    return jsonify(trueReturn(data=shearch_result))
 @api.route('/library/get_search_info',methods=['POST'])
 def book_info():
+    '''获取书籍详细信息'''
     book_url=request.get_json()['herf']
     book_info=get_info(book_url)
-    return jsonify(book_info)
+    return jsonify(trueReturn(book_info))
+@api.route('jwc/score_updata',methods=['GET'])
+def score_updata():
+    xh='130101140323'
+    pwd_info=get_pwd(xh)
+    jw_pwd=pwd_info['jw']
+    login=login_jwc(xh,jw_pwd)
+    if login['status']==True:
+        back=socer(login['data'])
+
+    else:
+        if login['msg']=='教务系统暂时无法访问':
+            return jsonify(falseReturn(msg='教务系统暂时无法访问，成绩更新失败'))
+        else:
+            return jsonify(falseReturn(msg='密码已修改，需重新登录教务系统'))
+    return jsonify(trueReturn(data=back))
+
+@api.route('jwc/kb_updata',methods=['GET'])
+def kb_updata():
+    xh='130101140323'
+    pwd_info=get_pwd(xh)
+    jw_pwd=pwd_info['jw']
+    login=login_jwc(xh,jw_pwd)
+    if login['status']==True:
+        back=get_kb(login['data'],xh)
+
+    else:
+        if login['msg']=='教务系统暂时无法访问':
+            return jsonify(falseReturn(msg='教务系统暂时无法访问，成绩更新失败'))
+        else:
+            return jsonify(falseReturn(msg='密码已修改，需重新登录教务系统'))
+    return jsonify(trueReturn(data=back))
+@api.route('kong',methods=['GET'])
+def kjs():
+    back=te()
+    return jsonify(back)
+
 

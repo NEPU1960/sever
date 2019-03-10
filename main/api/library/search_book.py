@@ -55,11 +55,11 @@ def get_name_book(book_name,page):
     #print(get_book_list)
     soup=BeautifulSoup(get_book_list,'lxml')
     table=soup.find_all('td',class_="fltd")
-    print(table)
+    #print(table)
     result=[]
     info_book={}
     for i in table[1:]:
-        print(i)
+        #print(i)
         herf=re.search('zyk[0-9]+',str(i)).group()#获取书地址
         text=i.get_text('\xa0','<br/>')
         new_text=text.split('\xa0')
