@@ -58,15 +58,15 @@ def auth():
     print(back_info)
     sfz=back_info['身份证']
     '''一卡通系统故障，暂时不提供'''
-    # if 'X' in sfz:
-    #     ecard_pwd=sfz[-7:] #一卡通密码获取
-    # else:
-    #     ecard_pwd=sfz[-8:-2]
-    # name=ecard_login(xh,ecard_pwd)
-    # if name=='yes':
-    #     ecard_pwd=ecard_pwd
-    # else:
-    #     ecard_pwd=None
+    if 'X' in sfz:
+        ecard_pwd=sfz[-7:] #一卡通密码获取
+    else:
+        ecard_pwd=sfz[-8:-2]
+    name=ecard_login(xh,ecard_pwd)
+    if name=='yes':
+        ecard_pwd=ecard_pwd
+    else:
+        ecard_pwd=None
     library_login_info=library_login(xh)
     if library_login_info['status']==True:
         library_pwd='0000'
