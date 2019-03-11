@@ -11,8 +11,8 @@
 from main.api.jwc.jwc_login import login_jwc,logout
 from main.api.jwc.get_info import info
 from main.api.library.login import library_login
-from main.api.ecard.login import ecard_login,get_tday_data,get_month_bill,get_info,loginout
-from main.api.yjs.login import get_login,get_info,get_score,get_class
+from main.api.ecard.login import ecard_login,get_tday_data,get_month_bill,get_ecard_info,loginout
+from main.api.yjs.login import get_login,get_info,get_score,get_class,yjs_loginout
 from ..api.jwc.get_kb import get_kb
 from ..api.jwc.jxjh import get_jxjh
 from ..api.jwc.score import socer
@@ -21,6 +21,7 @@ from main import create_app
 from ..model import *
 from . import Auth
 from flask import request,jsonify
+import json
 import json
 import time
 #=create_app()
@@ -40,8 +41,10 @@ def auth():
             type = '0'
             back_info = get_info(xh)
             score=get_score()
-            kb=get_class()
+            #kb=get_class()
             jw_status='1'
+            yjs_loginout()
+
     else:
         login=login_jwc(xh,pwd)
         if login['status']==False:
@@ -65,30 +68,29 @@ def auth():
         ecard_pwd=sfz[-6:]
         '''一卡通系统验证'''
     name=ecard_login(xh,ecard_pwd)
-    print(name)
     print(ecard_pwd)
     if name['status']==True:
         '''一卡通登录成功'''
         ecard_pwd=ecard_pwd
-        ecard_ID=get_info()
+        ecard_ID=get_ecard_info()
         print(ecard_ID)
         ecard_ye=ecard_ID['data']
         print(ecard_ye)
         ecard_ID=str(ecard_ID['msg'])
         month_bill = get_month_bill(ecard_ID)
-        day_bill=get_tday_data(ecard_ID)
+        # day_bill=get_tday_data(ecard_ID)
         loginout()
         ecard_status='1'
+        back_ecard={
+            'yue': ecard_ye,
+            'month_bill': month_bill['data'],
+            # 'day_bill':day_bill['data']
+        },
     else:
-        month_bill=[]
-        month_bill['data']=''
-        day_bill=[]
-        day_bill['data']=''
         ecard_pwd=None
         ecard_status = '0'
         ecard_ye=''
-
-
+        back_ecard={},
     library_login_info=library_login(xh)
     if library_login_info['status']==True:
         library_pwd='0000'
@@ -96,7 +98,7 @@ def auth():
     else:
         library_pwd=None
         library_status = '0'
-    add_jw_pwd(studentid=xh,jw_pwd=pwd,library_pwd=library_pwd,ecard_pwd=ecard_pwd,info=str(back_info),type_info=type,IDnumber=sfz)
+    #add_jw_pwd(studentid=xh,jw_pwd=pwd,library_pwd=library_pwd,ecard_pwd=ecard_pwd,info=str(back_info),type_info=type,IDnumber=sfz)
     status={
         'jw_status':jw_status,
         'library_status':library_status,
@@ -109,19 +111,11 @@ def auth():
             "score":score,
         },
         'library':library_login_info['data'],
-        'ecard':{
-            'yue':ecard_ye,
-            'month_bill':month_bill['data'],
-            'day_bill':day_bill['data']
-        },
-        'header':token
+        'ecard':back_ecard,
+         'header':str(token, encoding='utf-8')
     }
     # with open('{}.json'.format(xh),'wb') as f:
     #     f.write(json.dumps(back_info))
+    print(back_info)
 
-    return jsonify(back_info)
-if __name__ == '__main__':
-    xh='13010114033'
-    print(xh[2:4])
-    pwd='032050'
-    auth(xh,pwd)
+    return jsonify(trueReturn(data=back_info))

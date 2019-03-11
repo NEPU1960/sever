@@ -58,7 +58,7 @@ def ecard_login(xh,pwd):
     except:
         return falseReturn(msg='登录超时')
 @celery.task
-def get_info():
+def get_ecard_info():
     '''获取用户信息、账号'''
     user_info=session.get('http://yikatong.nepu.edu.cn/accountcardUser.action').text
     soup=BeautifulSoup(user_info,'lxml')

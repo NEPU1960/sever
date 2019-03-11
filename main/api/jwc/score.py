@@ -17,6 +17,7 @@ header={
     'Accept-Encoding':'gzip, deflate',
     'Host':'jwgl.nepu.edu.cn'
 }
+
 @celery.task
 def socer(login):
     '''成绩查询'''

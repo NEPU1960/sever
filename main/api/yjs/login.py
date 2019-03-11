@@ -87,16 +87,16 @@ def get_score(xn='',xq=''):
             score.append(score_info)
     return score
 @celery.task
-def get_class(xn=2017-2018,xq=1):
+def get_class():
     '''课表获取'''
 
-    data={
-        'dm':'',
-        'xn':xn,
-        'xq': xq
-    }
+    # data={
+    #     'dm':'',
+    #     'xn':xn,
+    #     'xq': xq
+    # }
     url='http://172.16.199.2:8008/yjsjwgl/xsgrkbck.do'
-    info=session.post(url,data=data,headers=header).text
+    info=session.get(url,headers=header).text
     soup=BeautifulSoup(info,'lxml')
     div=soup.find_all('div')
     list=[]
@@ -125,7 +125,10 @@ def get_class(xn=2017-2018,xq=1):
                 }
                 list.append(info_class)
     return list
+def yjs_loginout():
+    session.get('http://172.16.199.2:8008/yjsjwgl/desSession.do')
 if __name__ == '__main__':
 
     get_login()
+    print(get_class())
 
