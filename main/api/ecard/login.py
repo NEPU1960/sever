@@ -99,6 +99,7 @@ def get_tday_data(user_number):
         '''获取页面信息'''
         data = {
             'pageNum': str(i)
+
         }
         te = session.post('http://yikatong.nepu.edu.cn/accounttodatTrjnObject.action', data=data, headers=header).text
         soup = BeautifulSoup(te, 'lxml')
