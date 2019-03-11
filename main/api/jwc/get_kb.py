@@ -20,7 +20,7 @@ header={
 @celery.task
 def get_kb(login,username,xnxqh='2018-2019-2'):
     '''获取课表'''
-    url='http://jwgl.nepu.edu.cn/tkglAction.do?method=goListKbByXs&sql=&xnxqh='+xnxqh+'&zc=&xs0101id='+username
+    url='http://jwgl.nepu.edu.cn/tkglAction.do?method=goListKbByXs&istsxx=no&xnxqh='+xnxqh+'&zc=&xs0101id='+username
     get_info = login.get(url,headers=header).text
     soup=BeautifulSoup(get_info,'lxml')
     table=soup.find_all('table')

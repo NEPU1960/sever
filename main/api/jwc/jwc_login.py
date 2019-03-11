@@ -17,6 +17,7 @@ from main.comman import trueReturn,falseReturn
 login = requests.session()
 session = login.get('http://jwgl.nepu.edu.cn')
 header={
+    'Connection': 'close',
     'Accept':'application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*',
     'User-Agent':'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; InfoPath.2)',
     'Accept-Encoding':'gzip, deflate',
@@ -50,6 +51,7 @@ def login_jwc(username,pwd):
 def logout():
     '''登出教务系统'''
     login.get('http://jwgl.nepu.edu.cn/Logon.do?method=logout',headers=header)
+    session.close()
 
 if __name__ == '__main__':
     c=login_jwc('178003070655','111')
