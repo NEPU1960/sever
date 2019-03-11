@@ -15,6 +15,7 @@ import re
 from PIL import Image
 from io import BytesIO
 from main.comman import trueReturn,falseReturn
+from ..queue import celery
 
 session = requests.session()
 user_number=''
@@ -45,14 +46,18 @@ def ecard_login(xh,pwd):
         'rand':'8888'
     }
     # print(data)
-    # try:
-    back_info=session.post('http://yikatong.nepu.edu.cn/loginstudent.action',data=data,headers=header).text
-    if '登陆失败，密码错误' in back_info:
-        return falseReturn(msg='登录失败，密码输入错误')
-    elif '登陆失败，无此用户名称！' in back_info:
-        return falseReturn(msg='登录失败，学号输入错误')
-    else:
-        return trueReturn()
+    try:
+
+        back_info=session.post('http://yikatong.nepu.edu.cn/loginstudent.action',data=data,headers=header,timeout=(3.05,5)).text
+        if '登陆失败，密码错误' in back_info:
+            return falseReturn(msg='登录失败，密码输入错误')
+        elif '登陆失败，无此用户名称！' in back_info:
+            return falseReturn(msg='登录失败，学号输入错误')
+        else:
+            return trueReturn()
+    except:
+        return falseReturn(msg='登录超时')
+@celery.task
 def get_info():
     '''获取用户信息、账号'''
     user_info=session.get('http://yikatong.nepu.edu.cn/accountcardUser.action').text
@@ -75,7 +80,7 @@ def get_info():
     # print(yue)
     return trueReturn(data=yue,msg=user_number)
 
-
+@celery.task
 def get_tday_data(user_number):
     '''获取当日流水'''
     data = {
@@ -112,6 +117,8 @@ def get_tday_data(user_number):
             }
             zhangdan.append(info)  # 总消费记录
     return trueReturn(data=zhangdan)
+
+@celery.task
 def get_month_bill(user_number):
     '''获取月账单'''
     ecard_post_data = {
@@ -168,9 +175,10 @@ def get_month_bill(user_number):
                 '状态': td[7].string
             }
             zhangdan.append(info)  # 总消费记录
+    return trueReturn(data=zhangdan)
+def loginout():
     session.get('http://yikatong.nepu.edu.cn/loginout.action')
     session.close()
-    return trueReturn(data=zhangdan)
 
 if __name__ == '__main__':
     c=ecard_login('178003070655','032050')

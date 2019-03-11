@@ -11,7 +11,7 @@
 from celery.schedules import crontab
 class shuju():
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_DATABASE_URI='mysql+pymysql://wenepu:945999685@localhost:3306/wenepu'
+    SQLALCHEMY_DATABASE_URI='mysql+pymysql://wenepu:945999685@182.254.226.202:3306/wenepu'
 
     @staticmethod
     def init_app(app):

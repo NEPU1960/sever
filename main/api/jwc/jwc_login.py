@@ -50,6 +50,7 @@ def login_jwc(username,pwd):
 def logout():
     '''登出教务系统'''
     login.get('http://jwgl.nepu.edu.cn/Logon.do?method=logout',headers=header)
+    session.close()
 
 if __name__ == '__main__':
     c=login_jwc('178003070655','111')
