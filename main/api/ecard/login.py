@@ -35,7 +35,7 @@ def ecard_login(xh,pwd):
     pw = requests.get(get_pass_url)
     im = Image.open(BytesIO(pw.content))
     new_pwd = get_pay_keyboard_number_location(im, pwd)
-    #print(new_pwd)
+    print(new_pwd)
     data={
         "imageField.x": "20",
         "imageField.y": "12",

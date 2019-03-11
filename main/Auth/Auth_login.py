@@ -24,10 +24,10 @@ from flask import request,jsonify
 import json
 import time
 #=create_app()
+from ..pyJWT import create_token
 from ..AES import AESCipher
 @Auth.route('/',methods=['POST'])
 def auth():
-    start=time.time()
     xh=request.get_json()['studentid']
     pwd=request.get_json()['passwd']
     print(xh,pwd)
@@ -41,6 +41,7 @@ def auth():
             back_info = get_info(xh)
             score=get_score()
             kb=get_class()
+            jw_status='1'
     else:
         login=login_jwc(xh,pwd)
         if login['status']==False:
@@ -53,6 +54,7 @@ def auth():
             kb=get_kb(login,username=xh)
             jxjh=get_jxjh(login)
             add_jw_info(studentid=xh,score=str(score),timetable=str(kb),plan=str(jxjh))
+            jw_status = '1'
     print(back_info)
     sfz=back_info['身份证']
     '''一卡通系统故障，暂时不提供'''
@@ -68,21 +70,27 @@ def auth():
     library_login_info=library_login(xh)
     if library_login_info['status']==True:
         library_pwd='0000'
+        library_status='1'
     else:
         library_pwd=None
+        library_status = '0'
     #add_jw_pwd(studentid=xh,jw_pwd=pwd,library_pwd=library_pwd,ecard_pwd=ecard_pwd,info=str(back_info),type_info=type,IDnumber=sfz)
+    status={
+        'jw_status':jw_status,
+        'library_status':library_status,
+    }
+    token=create_app(xh,status)
     back_info={
         "jw":{
             "kb":kb,
             "score":score,
         },
-        'library':library_login_info['data']
+        'library':library_login_info['data'],
+        'header':token
     }
-    end=time.time()
     # with open('{}.json'.format(xh),'wb') as f:
     #     f.write(json.dumps(back_info))
-    cun=time.time()
-    print(end-start,cun-end)
+
     return jsonify(back_info)
 if __name__ == '__main__':
     xh='13010114033'
