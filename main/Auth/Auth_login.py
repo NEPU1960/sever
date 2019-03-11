@@ -60,9 +60,9 @@ def auth():
     sfz=back_info['身份证']
     '''一卡通系统故障，暂时不提供'''
     if 'X' in sfz:
-        ecard_pwd=sfz[-8:-2] #一卡通密码获取
+        ecard_pwd=sfz[-7:-2] #一卡通密码获取
     else:
-        ecard_pwd=sfz[-7:]
+        ecard_pwd=sfz[-6:]
         '''一卡通系统验证'''
     name=ecard_login(xh,ecard_pwd)
     print(name)

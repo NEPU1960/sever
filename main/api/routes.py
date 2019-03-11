@@ -31,12 +31,14 @@ app=create_app()
 
 @api.route('/',methods=['POST'])
 def hello_world():
-    code=request.get_json()['code']
-    back=openid(code)
-    if back['status']==False:
-        return jsonify(falseReturn(msg='非法访问'))
-    else:
-        return 'Hello World!'
+    '''
+    获取header，根据header判断账号类型
+    1、根据账号类型返回图片地址
+    2、返回一卡通，图书馆信息
+    3、根据数据库是否更新过，返回成绩信息
+    4、返回弹窗提示信息
+    5、浮动窗口信息
+    '''
 @api.route('/news/jwc_login')
 def get_news_list():
     te = request.headers['Authorization'][7:]
