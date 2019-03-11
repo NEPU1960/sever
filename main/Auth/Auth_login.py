@@ -41,7 +41,7 @@ def auth():
             type = '0'
             back_info = get_info(xh)
             score=get_score()
-            #kb=get_class()
+            kb=get_class()
             jw_status='1'
             yjs_loginout()
 
@@ -68,23 +68,20 @@ def auth():
         ecard_pwd=sfz[-6:]
         '''一卡通系统验证'''
     name=ecard_login(xh,ecard_pwd)
-    print(ecard_pwd)
     if name['status']==True:
         '''一卡通登录成功'''
         ecard_pwd=ecard_pwd
         ecard_ID=get_ecard_info()
-        print(ecard_ID)
         ecard_ye=ecard_ID['data']
-        print(ecard_ye)
         ecard_ID=str(ecard_ID['msg'])
         month_bill = get_month_bill(ecard_ID)
-        # day_bill=get_tday_data(ecard_ID)
+        day_bill=get_tday_data(ecard_ID)
         loginout()
         ecard_status='1'
         back_ecard={
             'yue': ecard_ye,
             'month_bill': month_bill['data'],
-            # 'day_bill':day_bill['data']
+            'day_bill':day_bill['data']
         },
     else:
         ecard_pwd=None

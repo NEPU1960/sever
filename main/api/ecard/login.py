@@ -21,7 +21,7 @@ session = requests.session()
 user_number=''
 header = {
         'Content - Type': 'application / x - www - form - urlencoded',
-        'Connection': 'Keep-Alive',
+        'Connection': 'close',
         'Host': 'yikatong.nepu.edu.cn',
         'User-Agent': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; InfoPath.2)',
         'Accept':	'application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*'
@@ -60,12 +60,12 @@ def ecard_login(xh,pwd):
 @celery.task
 def get_ecard_info():
     '''获取用户信息、账号'''
-    user_info=session.get('http://yikatong.nepu.edu.cn/accountcardUser.action').text
+    user_info=session.get('http://yikatong.nepu.edu.cn/accountcardUser.action',headers=header).text
     soup=BeautifulSoup(user_info,'lxml')
     te=soup.find_all('table')
     number=soup.find_all('div')
     user_number=number[4].string#一卡通账号获取
-    # print(user_number)
+    print(user_number)
     for i in te[1:2]:
         tr=i.find_all('td')
         te=tr[-5].string
@@ -89,7 +89,7 @@ def get_tday_data(user_number):
         "Submit": "+%C8%B7+%B6%A8+",
     }
     zhangdan=[]
-    te = session.post("http://yikatong.nepu.edu.cn/accounttodatTrjnObject.action", data=data, )  # 当日流水
+    te = session.post("http://yikatong.nepu.edu.cn/accounttodatTrjnObject.action", data=data, ).text  # 当日流水
     exp = re.compile("&nbsp;&nbsp;.(\d{1,2}).*&nbsp.*\d")
     PageCount = int(exp.findall(te)[0])  # 总页面数
     print(PageCount)
@@ -180,8 +180,3 @@ def loginout():
     session.get('http://yikatong.nepu.edu.cn/loginout.action')
     session.close()
 
-if __name__ == '__main__':
-    c=ecard_login('178003070655','032050')
-    d=get_info()
-    e=get_month_bill(d['msg'])
-    print(c,d,e)

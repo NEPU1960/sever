@@ -12,123 +12,121 @@ import re
 import copy
 def get_zhou_list(c):
     '''课表中周数解析为列表'''
-    if '单' or '双' in c:
-        if '单' in c:
-            print('单周',c)
-            te = re.search('单.*', c).group()
-            new = c.replace(te, '')
-            t = new.split('-')
-            zhou = []
-            if ',' in new:
-                d = new.split(',')
-                del_dist = copy.deepcopy(d)
-                for i in d:
-                    if '-' in str(i):
-                        del_dist.remove(i)
-                        # del_dist.append(i)
-                        zhou_info = i.split('-')
-                        if int(zhou_info[0])%2==0:
-                            if int(zhou_info[-1])%2==0:
-                                for j in range(int(zhou_info[0])+1, int(zhou_info[-1]),2):
-                                    # d.remove(i)
-                                    del_dist.append(str(j))
-                            else:
-                                for j in range(int(zhou_info[0])+1, int(zhou_info[-1])+1,2):
-                                    # d.remove(i)
-                                    del_dist.append(str(j))
+    if '单' in c:
+        print('单周',c)
+        te = re.search('单.*', c).group()
+        new = c.replace(te, '')
+        t = new.split('-')
+        zhou = []
+        if ',' in new:
+            d = new.split(',')
+            del_dist = copy.deepcopy(d)
+            for i in d:
+                if '-' in str(i):
+                    del_dist.remove(i)
+                    # del_dist.append(i)
+                    zhou_info = i.split('-')
+                    if int(zhou_info[0])%2==0:
+                        if int(zhou_info[-1])%2==0:
+                            for j in range(int(zhou_info[0])+1, int(zhou_info[-1]),2):
+                                # d.remove(i)
+                                del_dist.append(str(j))
                         else:
-                            if int(zhou_info[-1])  % 2== 0:
-                                for j in range(int(zhou_info[0]), int(zhou_info[-1]),2):
-                                    # d.remove(i)
-                                    del_dist.append(str(j))
-                            else:
-                                for j in range(int(zhou_info[0]), int(zhou_info[-1])+1,2):
-                                    # d.remove(i)
-                                    del_dist.append(str(j))
-            elif '-' in new:
-                zhou_info = new.split('-')
-                del_dist = []
-                if int(zhou_info[0]) % 2 == 0:
-                    if int(zhou_info[-1]) % 2 == 0:
-                        for j in range(int(zhou_info[0]) + 1, int(zhou_info[-1]), 2):
-                            # d.remove(i)
-                            del_dist.append(str(j))
+                            for j in range(int(zhou_info[0])+1, int(zhou_info[-1])+1,2):
+                                # d.remove(i)
+                                del_dist.append(str(j))
                     else:
-                        for j in range(int(zhou_info[0]) + 1, int(zhou_info[-1]) + 1, 2):
-                            # d.remove(i)
-                            del_dist.append(str(j))
-                else:
-                    if int(zhou_info[-1]) % 2 == 0:
-                        for j in range(int(zhou_info[0]), int(zhou_info[-1]), 2):
-                            # d.remove(i)
-                            del_dist.append(str(j))
-                    else:
-                        for j in range(int(zhou_info[0]), int(zhou_info[-1]) + 1, 2):
-                            # d.remove(i)
-                            del_dist.append(str(j))
-            else:
-                del_dist = t
-        elif '双' in c:
-            print('双周', c)
-            te = re.search('双.*', c).group()
-            new = c.replace(te, '')
-            zhou = []
-            if ',' in new:
-                d = new.split(',')
-                del_dist = copy.deepcopy(d)
-                for i in d:
-                    if '-' in str(i):
-                        del_dist.remove(i)
-                        # del_dist.append(i)
-                        zhou_info = i.split('-')
-                        if int(zhou_info[0]) % 2 == 0:
-                            if int(zhou_info[-1]) % 2 == 0:
-                                for j in range(int(zhou_info[0]) , int(zhou_info[-1])+ 1, 2):
-                                    # d.remove(i)
-                                    del_dist.append(str(j))
-                            else:
-                                for j in range(int(zhou_info[0]), int(zhou_info[-1]) , 2):
-                                    # d.remove(i)
-                                    del_dist.append(str(j))
+                        if int(zhou_info[-1])  % 2== 0:
+                            for j in range(int(zhou_info[0]), int(zhou_info[-1]),2):
+                                # d.remove(i)
+                                del_dist.append(str(j))
                         else:
-                            if int(zhou_info[1]) % 2 == 0:
-                                for j in range(int(zhou_info[0])+1, int(zhou_info[-1])+1, 2):
-
-                                    # d.remove(i)
-                                    del_dist.append(str(j))
-                            else:
-                                for j in range(int(zhou_info[0])+1, int(zhou_info[-1]), 2):
-                                    # d.remove(i)
-                                    del_dist.append(str(j))
-            elif '-' in new:
-                zhou_info = new.split('-')
-                del_dist = []
-                if int(zhou_info[0]) / 2 == 0:
-                    if int(zhou_info[-1]) / 2 == 0:
-                        for j in range(int(zhou_info[0]), int(zhou_info[-1]) + 1, 2):
-                            # d.remove(i)
-                            del_dist.append(str(j))
-                    else:
-                        for j in range(int(zhou_info[0]), int(zhou_info[-1]), 2):
-                            # d.remove(i)
-                            del_dist.append(str(j))
+                            for j in range(int(zhou_info[0]), int(zhou_info[-1])+1,2):
+                                # d.remove(i)
+                                del_dist.append(str(j))
+        elif '-' in new:
+            zhou_info = new.split('-')
+            del_dist = []
+            if int(zhou_info[0]) % 2 == 0:
+                if int(zhou_info[-1]) % 2 == 0:
+                    for j in range(int(zhou_info[0]) + 1, int(zhou_info[-1]), 2):
+                        # d.remove(i)
+                        del_dist.append(str(j))
                 else:
-                    if int(zhou_info[-1]) / 2 == 0:
-                        for j in range(int(zhou_info[0]) + 1, int(zhou_info[-1]) + 1, 2):
-                            # d.remove(i)
-                            del_dist.append(str(j))
-                    else:
-                        for j in range(int(zhou_info[0]) + 1, int(zhou_info[-1]), 2):
-                            # d.remove(i)
-                            del_dist.append(str(j))
+                    for j in range(int(zhou_info[0]) + 1, int(zhou_info[-1]) + 1, 2):
+                        # d.remove(i)
+                        del_dist.append(str(j))
             else:
-                del_dist = t
+                if int(zhou_info[-1]) % 2 == 0:
+                    for j in range(int(zhou_info[0]), int(zhou_info[-1]), 2):
+                        # d.remove(i)
+                        del_dist.append(str(j))
+                else:
+                    for j in range(int(zhou_info[0]), int(zhou_info[-1]) + 1, 2):
+                        # d.remove(i)
+                        del_dist.append(str(j))
+        else:
+            del_dist = [new]
+    elif '双' in c:
+        print('双周', c)
+        te = re.search('双.*', c).group()
+        new = c.replace(te, '')
+        zhou = []
+        if ',' in new:
+            d = new.split(',')
+            del_dist = copy.deepcopy(d)
+            for i in d:
+                if '-' in str(i):
+                    del_dist.remove(i)
+                    # del_dist.append(i)
+                    zhou_info = i.split('-')
+                    if int(zhou_info[0]) % 2 == 0:
+                        if int(zhou_info[-1]) % 2 == 0:
+                            for j in range(int(zhou_info[0]) , int(zhou_info[-1])+ 1, 2):
+                                # d.remove(i)
+                                del_dist.append(str(j))
+                        else:
+                            for j in range(int(zhou_info[0]), int(zhou_info[-1]) , 2):
+                                # d.remove(i)
+                                del_dist.append(str(j))
+                    else:
+                        if int(zhou_info[1]) % 2 == 0:
+                            for j in range(int(zhou_info[0])+1, int(zhou_info[-1])+1, 2):
 
+                                # d.remove(i)
+                                del_dist.append(str(j))
+                        else:
+                            for j in range(int(zhou_info[0])+1, int(zhou_info[-1]), 2):
+                                # d.remove(i)
+                                del_dist.append(str(j))
+        elif '-' in new:
+            zhou_info = new.split('-')
+            del_dist = []
+            if int(zhou_info[0]) / 2 == 0:
+                if int(zhou_info[-1]) / 2 == 0:
+                    for j in range(int(zhou_info[0]), int(zhou_info[-1]) + 1, 2):
+                        # d.remove(i)
+                        del_dist.append(str(j))
+                else:
+                    for j in range(int(zhou_info[0]), int(zhou_info[-1]), 2):
+                        # d.remove(i)
+                        del_dist.append(str(j))
+            else:
+                if int(zhou_info[-1]) / 2 == 0:
+                    for j in range(int(zhou_info[0]) + 1, int(zhou_info[-1]) + 1, 2):
+                        # d.remove(i)
+                        del_dist.append(str(j))
+                else:
+                    for j in range(int(zhou_info[0]) + 1, int(zhou_info[-1]), 2):
+                        # d.remove(i)
+                        del_dist.append(str(j))
+        else:
+            del_dist = [new]
     else:
         te=re.search('周.*',c).group()
         new=c.replace(te,'')
         t=new.split('-')
-        zhou=[]
+        del_dist=[]
         if ',' in new:
             d=new.split(',')
             del_dist = copy.deepcopy(d)
@@ -140,17 +138,21 @@ def get_zhou_list(c):
                     for j in range(int(zhou_info[0]),int(zhou_info[-1])+1):
                         # d.remove(i)
                         del_dist.append(str(j))
+            return del_dist
+
         elif '-' in new:
             zhou_info = new.split('-')
             del_dist=[]
             for j in range(int(zhou_info[0]), int(zhou_info[-1]) + 1):
                 # d.remove(i)
                 del_dist.append(str(j))
+            return del_dist
+
         else:
-            del_dist=t
-    return del_dist
+            del_dist=[new]
+        return del_dist
 if __name__ == '__main__':
-    print(get_zhou_list('3-15单周'))
+    print(get_zhou_list('3-15周'))
 
 
 
