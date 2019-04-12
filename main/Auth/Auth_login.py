@@ -70,19 +70,24 @@ def auth():
     name=ecard_login(xh,ecard_pwd)
     if name['status']==True:
         '''一卡通登录成功'''
-        ecard_pwd=ecard_pwd
-        ecard_ID=get_ecard_info()
-        ecard_ye=ecard_ID['data']
-        ecard_ID=str(ecard_ID['msg'])
-        month_bill = get_month_bill(ecard_ID)
-        day_bill=get_tday_data(ecard_ID)
-        loginout()
-        ecard_status='1'
-        back_ecard={
-            'yue': ecard_ye,
-            'month_bill': month_bill['data'],
-            'day_bill':day_bill['data']
-        },
+        try:
+            ecard_pwd=ecard_pwd
+            ecard_ID=get_ecard_info()
+            ecard_ye=ecard_ID['data']
+            ecard_ID=str(ecard_ID['msg'])
+            month_bill = get_month_bill(ecard_ID)
+            day_bill=get_tday_data(ecard_ID)
+            loginout()
+            ecard_status='1'
+            back_ecard={
+                'yue': ecard_ye,
+                'month_bill': month_bill['data'],
+                'day_bill':day_bill['data']
+            },
+        except:
+            ecard_status = '0'
+            ecard_ye = ''
+            back_ecard = {},
     else:
         ecard_pwd=None
         ecard_status = '0'
