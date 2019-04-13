@@ -31,7 +31,7 @@ def socer(login):
     soup=BeautifulSoup(get_kb,'lxml')
     div=soup.find_all('div')
     score=[]
-    name=['number','xuehao','name','xuenian','class-name','class-score','biaozhi','xingzhi','leibie','xueshi','xuefen','xingzhi','buchongxueqi']
+    name=['number','xuehao','name','xuenian','classname','classscore','biaozhi','xingzhi','leibie','xueshi','xuefen','xingzhi','buchongxueqi']
     xueqi = {}
     for i in div[5]:#获取成绩
         tr=i.find_all('tr')

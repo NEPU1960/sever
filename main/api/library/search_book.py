@@ -13,7 +13,7 @@ import re
 from bs4 import BeautifulSoup
 from ..queue import celery
 @celery.task
-def get_name_book(book_name,page):
+def get_name_book(book_name,page=1):
     '''图书检索'''
     session=requests.session()
     header = {
@@ -66,11 +66,11 @@ def get_name_book(book_name,page):
         #print(new_text)
         try:
             info_book={
-                    'book_name':new_text[0],
-                    'book_number':new_text[1],
-                    'book_auth':new_text[2],
+                    'bookname':new_text[0],
+                    'booknumber':new_text[1],
+                    'bookauth':new_text[2],
                     'ISBN':new_text[4],
-                    'book_press':new_text[6],
+                    'bookpress':new_text[6],
                     'date':new_text[8],
                     'herf':'http://210.46.140.21:8080/opac/ckgc.jsp?kzh='+herf
 
@@ -98,11 +98,11 @@ def get_info(url):
             'author':info_1.split('/')[1],
             'ISBN':info_2.split('/')[0],
             'pice':info_2.split('/')[1],
-            '出版社':info_3.split(' ')[1],
+            'chubanshe':info_3.split(' ')[1],
             'time':info_3.split(' ')[2],
             'topic':info_4.split('/')[0],
-            '页数':info_5,
-            '摘要':info_6
+            'yeshu':info_5,
+            'zhaiyao':info_6
 
         }
     return extend_info
