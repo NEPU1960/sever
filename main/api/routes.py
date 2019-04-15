@@ -23,7 +23,7 @@ from ..model import get_pwd
 from .jwc.jwc_login import login_jwc,logout
 from .jwc.score import socer
 from .jwc.get_kb import get_kb
-from .jwc.classroom import te
+from .jwc.classroom import te,get_info_room
 from .yjs.login import get_login,get_score,get_class
 import ast
 
@@ -113,12 +113,17 @@ def kb_updata():
 @api.route('kong',methods=['GET'])
 def kjs():
     '''空教室查询'''
-    back=redis.get('kong')
-    back=json.loads(back)
-    if not back:
-        back=te()
-        back=back
-        redis.set('kong',json.dumps(back),ex=36000)
+    # back=redis.get('kong')
+    # back=json.loads(back)
+    # if not back:
+    back=te()
+    back=back
+    redis.set('kong',json.dumps(back),ex=36000)
+    return jsonify(back)
+@api.route('classinfo',methods=['GET'])
+def classinfo():
+    '''空教室具体信息查询'''
+    back = get_info_room()
     return jsonify(back)
 
 

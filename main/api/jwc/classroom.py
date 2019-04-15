@@ -54,7 +54,7 @@ def te():
         soup=BeautifulSoup(back,'lxml')
         table=soup.find_all('table')
         lb=[]
-        sj=['','0102','0304','0506','0708','0910','1112']
+        sj=['','one','two','three','four','five','six']
         for i in table[:-3]:
             tr=i.find_all('tr')
 
@@ -68,7 +68,7 @@ def te():
                     # print(i.get_text('','\r\n\t\t\t\t\t\t\t\t'),jc)
                     if jc==0:
                         try:
-                            room_name = re.search('((1H-)|(2A-)|(1F-)|(主楼))[0-9]+',text).group()
+                            room_name = re.search('((1H-)|(2A-)|(1F-)|(主楼.))[0-9]+',text).group() #匹配教学楼
                             roomID = re.search('ue=.\w+', str(i)).group()
                             # print(roomID[4:])
                             # print(room_name)
@@ -79,26 +79,28 @@ def te():
                     else:
                         jc_bh=sj[jc]#上课时间转编号
                         if '◆' in text:
-                            class_info[jc_bh]='正常上课'
+                            class_info[jc_bh]='sk'#上课
                         elif 'Ｊ' in text:
-                            class_info[jc_bh]='借用'
+                            class_info[jc_bh]='jy'#借用
                         elif 'Ｘ' in text:
-                            class_info[jc_bh]='锁定'
+                            class_info[jc_bh]='sd'#锁定
                         elif 'Κ' in text:
-                            class_info[jc_bh]='考试'
+                            class_info[jc_bh]='ks'#考试
                         elif 'Ｇ' in text:
-                            class_info[jc_bh] = '固定调课'
+                            class_info[jc_bh] = 'guding'#固定调课
                         elif 'Ｌ' in text:
-                            class_info[jc_bh] = '临时调课'
-                        else:class_info[jc_bh] = '空闲'
+                            class_info[jc_bh] = 'linshi'#临时调课
+                        else:class_info[jc_bh] = 'kx'#空闲
                     jc = jc + 1
                 if class_info:
                     lb.append(class_info)
                 else:
                     pass
         return trueReturn(data=lb)
-def get_info_room(kcsj='20304',jsbh='00030'):
+def get_info_room(kc='0304',jsbh='00030'):
     '''查询教室占用情况'''#还需要完善，暂时不启用
+    zc = today_week()['zhou']
+    kcsj=str(today_week()['week'])+kc
     if login1['status']==False:
         return falseReturn(msg='暂时不能查询')
     else:
@@ -109,6 +111,16 @@ def get_info_room(kcsj='20304',jsbh='00030'):
         soup=BeautifulSoup(room_info,'lxml')
         tr=soup.find_all('tr')
         new_lb=[]
+        title={
+            "周次：":"zc",
+            "教室状态：":"status",
+            "教室：":"classroom",
+            "时间标志：":"sjbz",
+            "备注：":"text",
+            "时间：":"time",
+            "申 请 人：":"shenqingren",
+            "课程：":"class"
+        }
         for i in tr[2:3]:
             td=i.find_all('td')
 
@@ -119,11 +131,12 @@ def get_info_room(kcsj='20304',jsbh='00030'):
         info={}
         a=0
         b=2
+        print(new_lb)
         for i in range(8):
-            info[new_lb[a]]=new_lb[b]
+            info[title[new_lb[a]]]=new_lb[b]
             a=a+3
             b=b+3
-        #print(info)
+        print(info)
         return trueReturn(data=info)
 
 if __name__ == '__main__':
