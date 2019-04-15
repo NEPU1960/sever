@@ -12,22 +12,22 @@ def get_validate_code_from_image(img):
     return "".join(y)
 
 def test(sourse):
-	name_list = os.listdir(sourse)
-	num=0
-	right=0
-	for name in name_list:
-		num=num+1
-		img=Image.open(sourse+"/"+name)
-		code = get_validate_code_from_image(img)
-		if code==name[:4]:
-			right=right+1
-			#print("right")
-		else:
-			print("error:"+code+":"+name)
-	print("共测试了"+str(num)+"张验证码")
-	print("正确率:"+str(float(right/num)))   #输出准确率
+    name_list = os.listdir(sourse)
+    num=0
+    right=0
+    for name in name_list:
+        num=num+1
+        img=Image.open(sourse+"/"+name)
+        code = get_validate_code_from_image(img)
+        if code==name[:4]:
+            right=right+1
+            #print("right")
+        else:
+            print("error:"+code+":"+name)
+    print("共测试了"+str(num)+"张验证码")
+    print("正确率:"+str(float(right/num)))   #输出准确率
 if __name__ == '__main__':
-    # test("images")
     img = Image.open("3cmb.png")
     code = get_validate_code_from_image(img)
     print(code)
+    test("images")

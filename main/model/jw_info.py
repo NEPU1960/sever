@@ -14,10 +14,10 @@ class jw_info(db.Model):
     __tablename__ = 'jw_info'
     studentid = db.Column(db.String(32), primary_key=True, unique=True,
                        nullable=False)
-    score = db.Column(db.String(100), nullable=True)
-    timetable=db.Column(db.String(100),nullable=True)#课表
-    plan=db.Column(db.String(100),nullable=True)#教学计划
-    timetable_plan=db.Column(db.String(100),nullable=True)
+    score = db.Column(db.String(1000), nullable=True)
+    timetable=db.Column(db.String(1000),nullable=True)#课表
+    plan=db.Column(db.String(1000),nullable=True)#教学计划
+    timetable_plan=db.Column(db.String(1000),nullable=True)
 
 
 

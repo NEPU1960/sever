@@ -10,8 +10,7 @@
 """
 from bs4 import BeautifulSoup
 from main.api.jwc.zhouchuli import get_zhou_list
-from main import create_app,make_celery
-celery=make_celery(create_app())
+from ..queue import celery
 header={
     'Accept':'application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*',
     'User-Agent':'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; InfoPath.2)',
@@ -21,7 +20,7 @@ header={
 @celery.task
 def get_kb(login,username,xnxqh='2018-2019-2'):
     '''获取课表'''
-    url='http://jwgl.nepu.edu.cn/tkglAction.do?method=goListKbByXs&sql=&xnxqh='+xnxqh+'&zc=&xs0101id='+username
+    url='http://jwgl.nepu.edu.cn/tkglAction.do?method=goListKbByXs&istsxx=no&xnxqh='+xnxqh+'&zc=&xs0101id='+username
     get_info = login.get(url,headers=header).text
     soup=BeautifulSoup(get_info,'lxml')
     table=soup.find_all('table')
@@ -40,27 +39,36 @@ def get_kb(login,username,xnxqh='2018-2019-2'):
                     h = test.split(' ')
                     width=len(h)/5
                     if width<1:
+                        kong=[]
                         info={
-                            '星期':week,
-                            '节次':jieci,
-                            '课程':None,
-                            '教师':None,
-                            '教室':None,
-                            '周次':None,
-                            '班级':None,
+                            'weekday':week,
+                            'jieci':jieci,
+                            'name':'',
+                            'teacher':'',
+                            'classroom':'',
+                            'week':'',
+                            'class':'',
                         }
-                        total.append(info)
+                        kong.append(info)
+                        total.append(kong)
+                        pass
                     else:
+                        js=0
+                        print(h)
+                        taday_class=[]
                         for i in range(int(width)):
                             info={
-                                '星期': week,
-                                '节次': jieci,
-                                '课程': h[0],
-                                '教师': h[2],
-                                '教室': h[4],
-                                '周次': get_zhou_list(h[3]),
-                                '班级': h[1],
+                                'weekday': week,
+                                'jieci': jieci,
+                                'name': h[js],
+                                'teacher': h[js+2],
+                                'classroom': h[js+4],
+                                'week': get_zhou_list(h[js+3]),
+                                'class': h[js+1],
                             }
-                            total.append(info)
+                            js+=5
+                            taday_class.append(info)
+                        total.append(taday_class)
                 week = week + 1
+
     return total

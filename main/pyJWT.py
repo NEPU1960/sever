@@ -21,7 +21,6 @@ def create_token(IDnumber,status):
         "iat": int(time.time()),
         "aud": "qkyzs",
         "sub": IDnumber,
-        "username": '戚开元',
         "status":status
     }
     token = jwt.encode(payload, 'secret', algorithm='HS256')

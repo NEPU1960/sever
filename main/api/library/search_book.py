@@ -11,10 +11,9 @@
 import requests
 import re
 from bs4 import BeautifulSoup
-from main import create_app,make_celery
-celery=make_celery(create_app())
+from ..queue import celery
 @celery.task
-def get_name_book():
+def get_name_book(book_name,page=1):
     '''图书检索'''
     session=requests.session()
     header = {
@@ -25,7 +24,7 @@ def get_name_book():
         'Accept-Language': 'zh-CN,zh;q=0.9'
     }
     session.get('http://210.46.140.21:8080/opac/',headers=header)
-    jsc='新媒体'.encode('gb2312')
+    jsc=book_name.encode('gb2312')
     sort='kdm desc,datestr'.encode('gb2312')
     get_data={
         'ifface':'true',
@@ -33,7 +32,8 @@ def get_name_book():
         'jstj':'title',
         'sort':sort,
         'orderby':'desc',#排序方式
-        'geshi':'bgfm'
+        'geshi':'bgfm',
+        'page':page
     }
     data={
     'page':'1',
@@ -55,28 +55,29 @@ def get_name_book():
     #print(get_book_list)
     soup=BeautifulSoup(get_book_list,'lxml')
     table=soup.find_all('td',class_="fltd")
-    print(table)
+    #print(table)
     result=[]
     info_book={}
     for i in table[1:]:
-        print(i)
+        #print(i)
         herf=re.search('zyk[0-9]+',str(i)).group()#获取书地址
         text=i.get_text('\xa0','<br/>')
         new_text=text.split('\xa0')
         #print(new_text)
         try:
             info_book={
-                    'book_name':new_text[0],
-                    'book_number':new_text[1],
-                    'book_auth':new_text[2],
+                    'bookname':new_text[0],
+                    'booknumber':new_text[1],
+                    'bookauth':new_text[2],
                     'ISBN':new_text[4],
-                    'book_press':new_text[6],
+                    'bookpress':new_text[6],
                     'date':new_text[8],
                     'herf':'http://210.46.140.21:8080/opac/ckgc.jsp?kzh='+herf
 
                 }
             result.append(info_book)
         except:pass
+    return result
 
 def get_info(url):
     '''获取图书详细信息'''
@@ -97,17 +98,16 @@ def get_info(url):
             'author':info_1.split('/')[1],
             'ISBN':info_2.split('/')[0],
             'pice':info_2.split('/')[1],
-            '出版社':info_3.split(' ')[1],
+            'chubanshe':info_3.split(' ')[1],
             'time':info_3.split(' ')[2],
             'topic':info_4.split('/')[0],
-            '页数':info_5,
-            '摘要':info_6
+            'yeshu':info_5,
+            'zhaiyao':info_6
 
         }
-        print(extend_info)
+    return extend_info
 
 
 
 if __name__ == '__main__':
-
-    get_info('http://210.46.140.21:8080/opac/ckgc.jsp?kzh=zyk0455217')
+    get_name_book('新媒体')

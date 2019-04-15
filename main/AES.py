@@ -11,8 +11,6 @@
 from Crypto.Cipher import AES
 from Crypto import Random
 import base64
-from main import create_app
-app=create_app()
 class AESCipher:
 
     """
@@ -28,6 +26,7 @@ class AESCipher:
         self.key = key
 
     def encrypt(self, raw):
+        '''加密'''
         raw = self.pad(raw)
         iv = Random.new().read(AES.block_size)
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
@@ -38,9 +37,3 @@ class AESCipher:
         iv = enc[:16]
         cipher = AES.new(self.key, AES.MODE_CBC, iv)
         return self.unpad(cipher.decrypt(enc[16:]))
-if __name__ == '__main__':
-    print(app.config['JWC_PASSWORD_SECRET_KEY'])
-    aes=AESCipher(app.config['JWC_PASSWORD_SECRET_KEY'])#秘钥
-    test=aes.encrypt('230622199407032050')
-    print(test)
-    print(aes.decrypt(test))

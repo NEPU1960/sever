@@ -10,8 +10,7 @@
 '''
 from bs4 import BeautifulSoup
 import time
-from main import create_app,make_celery
-celery=make_celery(create_app())
+from ..queue import celery
 
 header={
     'Accept':'application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*',
@@ -27,7 +26,7 @@ def get_jxjh(login):
     soup=BeautifulSoup(get_jxjh,'lxml')
     div=soup.find_all('div')
     cankao=['序号','学期','课程编号','课程名称','总学时','学分','课程体系','课程属性','方向','方向年度','考核方式','开课单位']
-    info=[]
+    jxjh=[]
     for i in div[4]:
         table=i.find_all('tr')
         # print(table)
@@ -36,8 +35,8 @@ def get_jxjh(login):
             danwei={}
             for i in range(12):
                 danwei[cankao[i]]=td[i].get_text('','\xa0')
-                info.append(danwei)
-    return info
+                jxjh.append(danwei)
+    return jxjh
 
 
 if __name__ == '__main__':

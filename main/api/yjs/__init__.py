@@ -8,10 +8,9 @@
 @time: 2019/3/6 0006 15:07
 @desc:
 """
-from . import api
+
 import requests
 
-@api.route('/' )
 def login():
     appid='wx2d6c803a134581e6'
     secret='d20ddfe3841261ea72ea15df1254fd60'

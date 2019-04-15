@@ -12,9 +12,8 @@ import requests
 from bs4 import BeautifulSoup
 import re
 from main.api.yjs.jx import get_list
-from main import create_app,make_celery
+from ..queue import celery
 from ...comman import falseReturn,trueReturn
-celery=make_celery(create_app())
 session=requests.session()
 header={
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
@@ -56,9 +55,9 @@ def get_info(xh):
     info={
         'xh':xh,
         'name':name,
-        'zjhm':zjhm
+        '身份证':zjhm
     }
-    print(name,zjhm)
+    return info
 @celery.task
 def get_score(xn='',xq=''):
     '''成绩获取'''
@@ -86,18 +85,18 @@ def get_score(xn='',xq=''):
                 '正考成绩':td[5].get_text('','\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t'),
             }
             score.append(score_info)
-    print(score)
+    return score
 @celery.task
-def get_class(xn=2018-2019,xq=1):
+def get_class():
     '''课表获取'''
 
-    data={
-        'dm':'',
-        'xn':xn,
-        'xq': xq
-    }
+    # data={
+    #     'dm':'',
+    #     'xn':xn,
+    #     'xq': xq
+    # }
     url='http://172.16.199.2:8008/yjsjwgl/xsgrkbck.do'
-    info=session.post(url,data=data,headers=header).text
+    info=session.get(url,headers=header).text
     soup=BeautifulSoup(info,'lxml')
     div=soup.find_all('div')
     list=[]
@@ -109,7 +108,6 @@ def get_class(xn=2018-2019,xq=1):
             te=fen.split('/')
             # print(te)
             for i in te:
-                print(i)
                 week = re.search('周.', i).group()
 
                 jc = re.search('[0-9].*节', i).group()
@@ -126,8 +124,11 @@ def get_class(xn=2018-2019,xq=1):
                     'zhouci':get_list(zhouci[1:-2]),
                 }
                 list.append(info_class)
-    print(list)
+    return list
+def yjs_loginout():
+    session.get('http://172.16.199.2:8008/yjsjwgl/desSession.do')
 if __name__ == '__main__':
 
     get_login()
+    print(get_class())
 
