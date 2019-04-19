@@ -29,6 +29,7 @@ xq=today_week()['week']
 @celery.task
 def te():
     '''查询空教室'''
+
     if login1['status']==False:
         return falseReturn(msg='暂时不能查询')
     else:

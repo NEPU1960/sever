@@ -27,6 +27,9 @@ import time
 #=create_app()
 from ..pyJWT import create_token
 from ..AES import AESCipher
+library_status="0"
+ecard_status="0"
+
 @Auth.route('/',methods=['POST'])
 def auth():
     xh=request.get_json()['studentid']
@@ -114,7 +117,10 @@ def auth():
         },
         'library':library_login_info['data'],
         'ecard':back_ecard,
-         'header':str(token, encoding='utf-8')
+         'header':str(token, encoding='utf-8'),
+        'library_status':library_status,
+        'ecard_status':ecard_status,
+        'jw_status':"1"
     }
     # with open('{}.json'.format(xh),'wb') as f:
     #     f.write(json.dumps(back_info))
