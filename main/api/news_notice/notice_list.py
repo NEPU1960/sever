@@ -12,7 +12,7 @@ import requests
 from bs4 import BeautifulSoup
 from operator import itemgetter, attrgetter
 
-def nepu_news(tag,page):
+def nepu_notice(tag,page):
     get_title = []
     department={
         'home':['/type/520203.html','5202','520203','http://news.nepu.edu.cn/dwr/call/plaincall/portalAjax.getNewsXml.dwr'],

@@ -25,26 +25,27 @@ from .jwc.score import socer
 from .jwc.get_kb import get_kb
 from .jwc.classroom import te,get_info_room
 from .yjs.login import get_login,get_score,get_class
+from .news_notice.notice_list import nepu_notice
+from .news_notice.get_list import nepu_news
+# from .news_notice.jiexi import about
+
+from .news_notice.jiexi import about
 import ast
 
 app=create_app()
 
-@api.route('/',methods=['POST'])
-def hello_world():
-    '''
-    获取header，根据header判断账号类型
-    1、根据账号类型返回图片地址
-    2、返回一卡通，图书馆信息
-    3、根据数据库是否更新过，返回成绩信息
-    4、返回弹窗提示信息
-    5、浮动窗口信息
-    '''
-@api.route('/news/jwc_login')
+@api.route('/news/newslist')
 def get_news_list():
-    te = request.headers['Authorization'][7:]
-    c=verify_bearer_token(te)
-    print(c)
-    return '1'
+    news_list=nepu_news(1)
+    return jsonify(news_list)
+@api.route('/news/jiexi')
+def get_news_text():
+    get=request.args.getlist('url')
+    print(get)
+    news_text=about(get[0])
+    print(news_text)
+    return jsonify(news_text)
+
 @api.route('/library/search',methods=['POST'])
 def search_library():
     '''图书馆检索'''
@@ -59,7 +60,7 @@ def book_info():
     book_url=request.get_json()['herf']
     book_info=get_info(book_url)
     return jsonify(trueReturn(book_info))
-@api.route('jwc/score_updata',methods=['GET'])
+@api.route('/jwc/score_updata',methods=['GET'])
 def score_updata():
     '''更新成绩'''
     xh='178003070655'
@@ -85,7 +86,7 @@ def score_updata():
                 return jsonify(falseReturn(msg='密码已修改，需重新登录教务系统'))
     return jsonify(trueReturn(data=back))
 
-@api.route('jwc/kb_updata',methods=['GET'])
+@api.route('/jwc/kb_updata',methods=['GET'])
 def kb_updata():
     '''更新课表'''
     xh = '178003070655'
@@ -110,17 +111,14 @@ def kb_updata():
             else:
                 return jsonify(falseReturn(msg='密码已修改，需重新登录教务系统'))
     return jsonify(trueReturn(data=back))
-@api.route('kong',methods=['GET'])
+@api.route('/kong',methods=['GET'])
 def kjs():
     '''空教室查询'''
-    # back=redis.get('kong')
-    # back=json.loads(back)
-    # if not back:
     back=te()
     back=back
     redis.set('kong',json.dumps(back),ex=36000)
     return jsonify(back)
-@api.route('classinfo',methods=['GET'])
+@api.route('/classinfo',methods=['GET'])
 def classinfo():
     '''空教室具体信息查询'''
     back = get_info_room()
