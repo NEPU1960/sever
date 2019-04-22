@@ -15,6 +15,9 @@ import time
 from main.api.jwc.get_week import today_week
 from main.comman import trueReturn,falseReturn
 from ..queue import celery
+from redis import Redis
+import json
+import ast
 header={
     'Accept':'application/x-ms-application, image/jpeg, application/xaml+xml, image/gif, image/pjpeg, application/x-ms-xbap, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/msword, */*',
     'User-Agent':'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; .NET4.0C; .NET4.0E; InfoPath.2)',
@@ -30,74 +33,85 @@ xq=today_week()['week']
 def te():
     '''查询空教室'''
 
-    if login1['status']==False:
-        return falseReturn(msg='暂时不能查询')
+    redis=Redis(host="127.0.0.1",port=6379,db=1)
+    week=redis.get("zhouci")
+    if week!=today_week():
+        redis.delete("kong")
+    kong=redis.get('kong')
+    if kong!=None:
+        kong=json.loads(kong)
+        return trueReturn(data=kong)
     else:
-        login=login1['data']
-        data={
-            'typewhere':'xszq',
-            'xnxqh':'2018-2019-2',
-            'xqbh':'00001',
-            'jxqbh':'',
-            'jxlbh':'',
-             'jsbh':'',
-            'bjfh':'%3D',
-            'rnrs':'',
-            'jszt':'',
-            'zc':zc,
-            'zc2':zc,
-            'xq':xq,
-            'xq2':xq,
-            'jc':'',
-            'jc2':'',
-        }
-        back=login.post('http://jwgl.nepu.edu.cn/jiaowu/kxjsgl/kxjsgl.do?method=queryKxxxByJs&typewhere=xszq',data=data).text
-        soup=BeautifulSoup(back,'lxml')
-        table=soup.find_all('table')
-        lb=[]
-        sj=['','one','two','three','four','five','six']
-        for i in table[:-3]:
-            tr=i.find_all('tr')
+        if login1['status']==False:
+            return falseReturn(msg='暂时不能查询')
+        else:
+            login=login1['data']
+            data={
+                'typewhere':'xszq',
+                'xnxqh':'2018-2019-2',
+                'xqbh':'00001',
+                'jxqbh':'',
+                'jxlbh':'',
+                 'jsbh':'',
+                'bjfh':'%3D',
+                'rnrs':'',
+                'jszt':'',
+                'zc':zc,
+                'zc2':zc,
+                'xq':xq,
+                'xq2':xq,
+                'jc':'',
+                'jc2':'',
+            }
+            back=login.post('http://jwgl.nepu.edu.cn/jiaowu/kxjsgl/kxjsgl.do?method=queryKxxxByJs&typewhere=xszq',data=data).text
+            soup=BeautifulSoup(back,'lxml')
+            table=soup.find_all('table')
+            lb=[]
+            sj=['','one','two','three','four','five','six']
+            for i in table[:-3]:
+                tr=i.find_all('tr')
 
-            for i in tr[3:-2]:
-                class_info = {}
-                td=i.find_all('td')
-                #print(td)
-                jc = 0
-                for i in td:
-                    text=i.get_text()
-                    # print(i.get_text('','\r\n\t\t\t\t\t\t\t\t'),jc)
-                    if jc==0:
-                        try:
-                            room_name = re.search('((1H-)|(2A-)|(1F-)|(主楼.))[0-9]+',text).group() #匹配教学楼
-                            roomID = re.search('ue=.\w+', str(i)).group()
-                            # print(roomID[4:])
-                            # print(room_name)
-                            class_info['room'] = room_name
-                            class_info['roomID']=roomID[4:]
-                        except:
-                              break
+                for i in tr[3:-2]:
+                    class_info = {}
+                    td=i.find_all('td')
+                    #print(td)
+                    jc = 0
+                    for i in td:
+                        text=i.get_text()
+                        # print(i.get_text('','\r\n\t\t\t\t\t\t\t\t'),jc)
+                        if jc==0:
+                            try:
+                                room_name = re.search('((1H-)|(2A-)|(1F-)|(主楼.))[0-9]+',text).group() #匹配教学楼
+                                roomID = re.search('ue=.\w+', str(i)).group()
+                                # print(roomID[4:])
+                                # print(room_name)
+                                class_info['room'] = room_name
+                                class_info['roomID']=roomID[4:]
+                            except:
+                                  break
+                        else:
+                            jc_bh=sj[jc]#上课时间转编号
+                            if '◆' in text:
+                                class_info[jc_bh]='sk'#上课
+                            elif 'Ｊ' in text:
+                                class_info[jc_bh]='jy'#借用
+                            elif 'Ｘ' in text:
+                                class_info[jc_bh]='sd'#锁定
+                            elif 'Κ' in text:
+                                class_info[jc_bh]='ks'#考试
+                            elif 'Ｇ' in text:
+                                class_info[jc_bh] = 'guding'#固定调课
+                            elif 'Ｌ' in text:
+                                class_info[jc_bh] = 'linshi'#临时调课
+                            else:class_info[jc_bh] = 'kx'#空闲
+                        jc = jc + 1
+                    if class_info:
+                        lb.append(class_info)
                     else:
-                        jc_bh=sj[jc]#上课时间转编号
-                        if '◆' in text:
-                            class_info[jc_bh]='sk'#上课
-                        elif 'Ｊ' in text:
-                            class_info[jc_bh]='jy'#借用
-                        elif 'Ｘ' in text:
-                            class_info[jc_bh]='sd'#锁定
-                        elif 'Κ' in text:
-                            class_info[jc_bh]='ks'#考试
-                        elif 'Ｇ' in text:
-                            class_info[jc_bh] = 'guding'#固定调课
-                        elif 'Ｌ' in text:
-                            class_info[jc_bh] = 'linshi'#临时调课
-                        else:class_info[jc_bh] = 'kx'#空闲
-                    jc = jc + 1
-                if class_info:
-                    lb.append(class_info)
-                else:
-                    pass
-        return trueReturn(data=lb)
+                        pass
+                    redis.set("kong",json.dumps(lb))
+                    redis.set("zhouci",json.dumps(today_week()))
+            return trueReturn(data=lb)
 def get_info_room(kc='0304',jsbh='00030'):
     '''查询教室占用情况'''#还需要完善，暂时不启用
     zc = today_week()['zhou']

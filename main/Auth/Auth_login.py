@@ -37,10 +37,10 @@ def auth():
     print(xh,pwd)
     if xh[2:4]=='80':#判断是否是研究生
         login_info=get_login(xh,pwd)
-
         if login_info['msg']!='100':
             return jsonify(login_info)
         else:
+            '''研究生登陆'''
             type = '0'
             back_info = get_info(xh)
             score=get_score()
@@ -49,6 +49,7 @@ def auth():
             yjs_loginout()
 
     else:
+        '''本科生登陆'''
         login=login_jwc(xh,pwd)
         if login['status']==False:
             return jsonify(login)
@@ -103,13 +104,13 @@ def auth():
     else:
         library_pwd=None
         library_status = '0'
-    #add_jw_pwd(studentid=xh,jw_pwd=pwd,library_pwd=library_pwd,ecard_pwd=ecard_pwd,info=str(back_info),type_info=type,IDnumber=sfz)
+    add_jw_pwd(studentid=xh,jw_pwd=pwd,library_pwd=library_pwd,ecard_pwd=ecard_pwd,info=str(back_info),type_info=type,IDnumber=sfz)#密码存储
     status={
         'jw_status':jw_status,
         'library_status':library_status,
         'ecard_status':ecard_status
     }
-    token=create_token(xh,status)
+    token=create_token(xh,status) #创建token
     back_info={
         "jw":{
             "kb":kb,

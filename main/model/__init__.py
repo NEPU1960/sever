@@ -17,6 +17,7 @@ from .library_info import library_info
 from .openid_info import openid_info
 from ..AES import AESCipher
 from ..comman import trueReturn,falseReturn
+from .image import Image
 
 
 
@@ -66,15 +67,15 @@ def get_pwd(studentid):
             library_pwd=aes.decrypt(student_info.library_pwd)
         else:
             library_pwd=''
-        if student_info.ecard_pwd:
-            ecard_pwd=aes.decrypt(student_info.ecard_pwd)
-        else:
-            ecard_pwd=''
+        # if student_info.ecard_pwd:
+        #     ecard_pwd=aes.decrypt(student_info.ecard_pwd)
+        # else:
+        #     ecard_pwd=''
         pwd={
             'jw':jw_pwd,
             'lib':library_pwd,
-            'ecard':ecard_pwd
+            'ecard':student_info.ecard_pwd
         }
         return pwd
-
-
+def get_image():
+    pass

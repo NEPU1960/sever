@@ -22,4 +22,4 @@ def today_week():
     zhou=int(jg/7+1)
     return {'week':get_week,'zhou':zhou}
 if __name__ == '__main__':
-    print(today_week()['week'])
+    print(today_week())

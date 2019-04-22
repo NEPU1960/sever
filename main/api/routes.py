@@ -27,7 +27,9 @@ from .jwc.classroom import te,get_info_room
 from .yjs.login import get_login,get_score,get_class
 from .news_notice.notice_list import nepu_notice
 from .news_notice.get_list import nepu_news
+from ..pyJWT import verify_bearer_token
 # from .news_notice.jiexi import about
+from .jwc.get_week import today_week
 
 from .news_notice.jiexi import about
 import ast
@@ -63,28 +65,34 @@ def book_info():
 @api.route('/jwc/score_updata',methods=['GET'])
 def score_updata():
     '''更新成绩'''
-    xh='178003070655'
+    # xh='161201440101'
+    print(request.headers.get("Authorization"))
+    xh=verify_bearer_token(request.headers.get("Authorization"))['sub']#获取token信息
+    print(xh)
     pwd_info=get_pwd(xh)
+    print(pwd_info)
     jw_pwd=pwd_info['jw']
     if xh[2:4] == '80':
+        '''研究生登陆'''
         login=get_login(xh,jw_pwd)
         if login['status']==True:
             back=get_score()
+            return jsonify(trueReturn(data=back))
         else:
-            return jsonify(login)
+            return jsonify(falseReturn(msg=login))
     else:
-        pwd_info=get_pwd(xh)
-        jw_pwd=pwd_info['jw']
+        # pwd_info=get_pwd(xh)
+        # jw_pwd=pwd_info['jw']
         login=login_jwc(xh,jw_pwd)
         if login['status']==True:
             back=socer(login['data'])
-
+            return jsonify(trueReturn(data=back,msg='1'))
         else:
             if login['msg']=='教务系统暂时无法访问':
                 return jsonify(falseReturn(msg='教务系统暂时无法访问，成绩更新失败'))
             else:
                 return jsonify(falseReturn(msg='密码已修改，需重新登录教务系统'))
-    return jsonify(trueReturn(data=back))
+
 
 @api.route('/jwc/kb_updata',methods=['GET'])
 def kb_updata():
@@ -123,5 +131,12 @@ def classinfo():
     '''空教室具体信息查询'''
     back = get_info_room()
     return jsonify(back)
+@api.route('start')
+def start():
+    try:
+        info = verify_bearer_token(request.headers.get("Authorization"))['sub']  # 获取token信息
+    except:
+        return "未绑定"
+    week=today_week()
 
 

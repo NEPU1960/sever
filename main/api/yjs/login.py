@@ -72,19 +72,27 @@ def get_score(xn='',xq=''):
     soup=BeautifulSoup(info,'lxml')
     div=soup.find_all('div')
     score=[]
+    name=['xuenian','xueqi','classname','xingzhi','xuefen','classscore']
+    xueqi = {}
     for i in div:
         tr=i.find_all('tr')
         for i in tr[1:]:
+            score_info={}
             td=i.find_all('td')
-            score_info={
-                '学年':td[0].get_text('','\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t'),
-                '学期':td[1].get_text('','\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t'),
-                '课程名称':td[2].get_text('','\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t'),
-                '课程性质':td[3].get_text('','\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t'),
-                '学分':td[4].get_text('','\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t'),
-                '正考成绩':td[5].get_text('','\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t'),
-            }
-            score.append(score_info)
+            for j in range(0,6):
+                score_info[name[j]]=td[j].get_text('','\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t')
+            key=td[1].get_text('','\r\n\t\t\t\t\t\t\t\t\t\t\t\t\t')
+            if key in xueqi:
+                inter=xueqi[key]
+                inter.append(score_info)
+                xueqi[key]=inter
+            else:
+                xueqi_list=[]
+                xueqi_list.append(score_info)
+                xueqi[key]=xueqi_list
+    for i in xueqi:
+        score.append({i: xueqi[i]})
+    print(score)
     return score
 @celery.task
 def get_class():
