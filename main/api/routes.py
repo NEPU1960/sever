@@ -30,6 +30,7 @@ from .news_notice.get_list import nepu_news
 from ..pyJWT import verify_bearer_token
 # from .news_notice.jiexi import about
 from .jwc.get_week import today_week
+from .library.login import library_login
 
 from .news_notice.jiexi import about
 import ast
@@ -47,7 +48,14 @@ def get_news_text():
     news_text=about(get[0])
     print(news_text)
     return jsonify(news_text)
-
+@api.route('/library/info')
+def get_library_info():
+    xh = verify_bearer_token(request.headers.get("Authorization"))['sub']
+    pwd_info = get_pwd(xh)
+    print(pwd_info)
+    lib_pwd = pwd_info['lib']
+    back_list=library_login(xh,lib_pwd)
+    return jsonify(back_list)
 @api.route('/library/search',methods=['POST'])
 def search_library():
     '''图书馆检索'''
@@ -124,7 +132,7 @@ def kjs():
     '''空教室查询'''
     back=te()
     back=back
-    redis.set('kong',json.dumps(back),ex=36000)
+    # redis.set('kong',json.dumps(back),ex=36000)
     return jsonify(back)
 @api.route('/classinfo',methods=['GET'])
 def classinfo():
