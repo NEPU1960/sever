@@ -60,6 +60,7 @@ def get_library_info():
 def search_library():
     '''图书馆检索'''
     book_name=request.get_json()['book_name']
+
     page=request.get_json()['page']
     print(book_name)
     shearch_result=get_name_book(book_name,page=1)
