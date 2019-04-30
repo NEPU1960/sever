@@ -39,28 +39,36 @@ def get_kb(login,username,xnxqh='2018-2019-2'):
                     h = test.split(' ')
                     width=len(h)/5
                     if width<1:
-                        # info={
-                        #     '星期':week,
-                        #     '节次':jieci,
-                        #     '课程':'',
-                        #     '教师':'',
-                        #     '教室':'',
-                        #     '周次':'',
-                        #     '班级':'',
-                        # }
-                        # total.append(info)
+                        kong=[]
+                        info={
+                            'weekday':week,
+                            'jieci':jieci,
+                            'name':'',
+                            'teacher':'',
+                            'classroom':'',
+                            'week':'',
+                            'class':'',
+                        }
+                        kong.append(info)
+                        total.append(kong)
                         pass
                     else:
+                        js=0
+                        print(h)
+                        taday_class=[]
                         for i in range(int(width)):
                             info={
-                                '星期': week,
-                                '节次': jieci,
-                                '课程': h[0],
-                                '教师': h[2],
-                                '教室': h[4],
-                                '周次': get_zhou_list(h[3]),
-                                '班级': h[1],
+                                'weekday': week,
+                                'jieci': jieci,
+                                'name': h[js],
+                                'teacher': h[js+2],
+                                'classroom': h[js+4],
+                                'week': get_zhou_list(h[js+3]),
+                                'class': h[js+1],
                             }
-                            total.append(info)
+                            js+=5
+                            taday_class.append(info)
+                        total.append(taday_class)
                 week = week + 1
+
     return total

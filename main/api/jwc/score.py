@@ -31,14 +31,44 @@ def socer(login):
     soup=BeautifulSoup(get_kb,'lxml')
     div=soup.find_all('div')
     score=[]
+    name=['number','xuehao','name','xuenian','classname','classscore','biaozhi','xingzhi','leibie','xueshi','xuefen','xingzhi','buchongxueqi']
+    xueqi = {}
     for i in div[5]:#获取成绩
         tr=i.find_all('tr')
         for i in tr:
             info = {}
             td=i.find_all('td')
             for i in range(len(td)):
-                info[i]=td[i].get_text()
-            score.append(info)
+                info[name[i]]=td[i].get_text()
+                # "0": " 71",
+                # "1": "161201440101",
+                # "2": "张贺",
+                # "3": "2018-2019-1",
+                # "4": "申论",
+                # "5": "83",
+                # "6": " ",
+                # "7": "专业选修课",
+                # "8": "限选",
+                # "9": "32",
+                # "10": "2",
+                # "11": "正常考试",
+                # "12": " "
+            key=td[3].get_text()
+            if key in xueqi:
+                inter=xueqi[key]
+                inter.append(info)
+                xueqi[key]=inter
+            else:
+                xueqi_list=[]
+                xueqi_list.append(info)
+                xueqi[key]=xueqi_list
+
+            # xueqi[td[3].get_text()]=info
+            # score.append(xueqi)
+    for i in xueqi:
+        score.append({i:xueqi[i]})
+    score.reverse()
+
     for i in div[8]:#获取学分
         span=i.find_all('span')
         xuefen={

@@ -30,6 +30,7 @@ def library_login(xh,pwd='0000'):
             jiexi=soup.find_all('tr')
             xiangxi = []
             #print(jiexi[1])
+            listname=['id','bookid','bookname','author','juanqi','guancangdanwei','diancangdi','canceleixing','jitime','huantime','xujietime','xujiecishu','status']
             for i in jiexi[1]:
                 c=i.find_all('tr')
                 # print(c[1])
@@ -38,17 +39,22 @@ def library_login(xh,pwd='0000'):
                     booke_txt=booke.find_all('td',class_='bordertd')
                     #print(booke_txt[0].get_text()[:-1])
                     for i in range(13):
-                        name[i]=booke_txt[i].get_text()[:-1]
+                        name[listname[i]]=booke_txt[i].get_text()[:-1]
                     xiangxi.append(name)
             print(xiangxi)
-            back_list=[]#带有剩余过期时间的返回信息
+            backlist=[]#带有剩余过期时间的返回信息
+            time=[]
             for i in xiangxi:
-                tss=i[9]
+                tss=i['huantime']
                 date1 = datetime.datetime.strptime(tss, "%Y-%m-%d %H:%M:%S")
                 date2 = datetime.datetime.now()
                 num = (date1 - date2).days
-                i[13] = num
-                back_list.append(i)
+                i['lastday'] = num
+                backlist.append(i)
+                if num<=7:
+                    time.append(time)
+            # backlist.append({'total':len(xiangxi)})
+            back_list={'booklist':backlist,'total':len(xiangxi),'guoqi':len(time)}
             return trueReturn(data=back_list)
         elif '读者密码错误！请重新输入！' in is_success:
             print('读者密码错误！请重新输入！')
