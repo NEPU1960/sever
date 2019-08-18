@@ -17,8 +17,19 @@ from .library_info import library_info
 from .openid_info import openid_info
 from ..AES import AESCipher
 from ..comman import trueReturn,falseReturn
+from .ad import AD
 
-
+def get_ad():
+    info=AD.query.filter()
+    back_list=[]
+    for i in info:
+        ad_dist={'Number':i.Number,'Url':i.Url}
+        back_list.append(ad_dist)
+    print (back_list)
+    return back_list
+def get_version():
+    version=AD.query.filter_by(Number="1").first()
+    return version.Version
 
 
 # test=aes.encrypt('230622199407032050')

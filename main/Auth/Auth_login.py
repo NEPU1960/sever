@@ -27,9 +27,6 @@ import time
 #=create_app()
 from ..pyJWT import create_token
 from ..AES import AESCipher
-library_status="0"
-ecard_status="0"
-
 @Auth.route('/',methods=['POST'])
 def auth():
     xh=request.get_json()['studentid']
@@ -73,24 +70,19 @@ def auth():
     name=ecard_login(xh,ecard_pwd)
     if name['status']==True:
         '''一卡通登录成功'''
-        try:
-            ecard_pwd=ecard_pwd
-            ecard_ID=get_ecard_info()
-            ecard_ye=ecard_ID['data']
-            ecard_ID=str(ecard_ID['msg'])
-            month_bill = get_month_bill(ecard_ID)
-            day_bill=get_tday_data(ecard_ID)
-            loginout()
-            ecard_status='1'
-            back_ecard={
-                'yue': ecard_ye,
-                'month_bill': month_bill['data'],
-                'day_bill':day_bill['data']
-            },
-        except:
-            ecard_status = '0'
-            ecard_ye = ''
-            back_ecard = {},
+        ecard_pwd=ecard_pwd
+        ecard_ID=get_ecard_info()
+        ecard_ye=ecard_ID['data']
+        ecard_ID=str(ecard_ID['msg'])
+        month_bill = get_month_bill(ecard_ID)
+        day_bill=get_tday_data(ecard_ID)
+        loginout()
+        ecard_status='1'
+        back_ecard={
+            'yue': ecard_ye,
+            'month_bill': month_bill['data'],
+            'day_bill':day_bill['data']
+        },
     else:
         ecard_pwd=None
         ecard_status = '0'
@@ -117,10 +109,7 @@ def auth():
         },
         'library':library_login_info['data'],
         'ecard':back_ecard,
-         'header':str(token, encoding='utf-8'),
-        'library_status':library_status,
-        'ecard_status':ecard_status,
-        'jw_status':"1"
+         'header':str(token, encoding='utf-8')
     }
     # with open('{}.json'.format(xh),'wb') as f:
     #     f.write(json.dumps(back_info))

@@ -28,6 +28,8 @@ def create_app():
     app.register_blueprint(api,url_prefix='/api')
     from .Auth import Auth
     app.register_blueprint(Auth,url_prefix='/auth')
+    from .ad import AD
+    app.register_blueprint(AD,url_prefix='/AD')
     return app
 
 def make_celery(app):

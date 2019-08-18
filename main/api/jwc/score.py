@@ -33,6 +33,7 @@ def socer(login):
     score=[]
     name=['number','xuehao','name','xuenian','classname','classscore','biaozhi','xingzhi','leibie','xueshi','xuefen','xingzhi','buchongxueqi']
     xueqi = {}
+    print(div)
     for i in div[5]:#获取成绩
         tr=i.find_all('tr')
         for i in tr:
@@ -40,19 +41,19 @@ def socer(login):
             td=i.find_all('td')
             for i in range(len(td)):
                 info[name[i]]=td[i].get_text()
-                # "0": " 71",
-                # "1": "161201440101",
-                # "2": "张贺",
-                # "3": "2018-2019-1",
-                # "4": "申论",
-                # "5": "83",
-                # "6": " ",
-                # "7": "专业选修课",
-                # "8": "限选",
-                # "9": "32",
-                # "10": "2",
-                # "11": "正常考试",
-                # "12": " "
+                # "序号": " 71",
+                # "学号": "161201440101",
+                # "姓名": "张贺",
+                # "开课时间": "2018-2019-1",
+                # "课程名称": "申论",
+                # "分数": "83",
+                # "标志": " ",
+                # "性质": "专业选修课",
+                # "类别": "限选",
+                # "学时": "32",
+                # "学分": "2",
+                # "性质": "正常考试",
+                # "补重学期0111111": " "
             key=td[3].get_text()
             if key in xueqi:
                 inter=xueqi[key]

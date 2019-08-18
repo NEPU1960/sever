@@ -14,13 +14,16 @@ import re
 from main.api.yjs.jx import get_list
 from ..queue import celery
 from ...comman import falseReturn,trueReturn
+
 session=requests.session()
+
 header={
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
         'Content-Type': 'application/x-www-form-urlencoded',
         'Host': '172.16.199.2:8008',
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36'
     }
+
 def get_login(xh,pwd):
     '''登陆'''
     data={
@@ -28,7 +31,6 @@ def get_login(xh,pwd):
         'password': pwd,
         'radiovalue':'student'
     }
-
     url='http://172.16.199.2:8008/yjsjwgl/login.do'
     try:
 
@@ -36,12 +38,12 @@ def get_login(xh,pwd):
         if back_info.status_code!=200:
             return falseReturn(msg='系统暂时不能访问')
         elif '用户名或密码不正确' in back_info.text:
-
             return falseReturn(msg='学号或密码错误')
         else:
             return trueReturn(msg='100',data=session)
     except requests.exceptions.RequestException:
         return falseReturn(msg="连接超时")
+
 @celery.task
 def get_info(xh):
     '''获取个人信息'''
@@ -58,6 +60,7 @@ def get_info(xh):
         '身份证':zjhm
     }
     return info
+
 @celery.task
 def get_score(xn='',xq=''):
     '''成绩获取'''
@@ -86,10 +89,10 @@ def get_score(xn='',xq=''):
             }
             score.append(score_info)
     return score
+
 @celery.task
 def get_class():
     '''课表获取'''
-
     # data={
     #     'dm':'',
     #     'xn':xn,
@@ -126,9 +129,10 @@ def get_class():
                 list.append(info_class)
     return list
 def yjs_loginout():
+    '''退出登录'''
     session.get('http://172.16.199.2:8008/yjsjwgl/desSession.do')
-if __name__ == '__main__':
 
+if __name__ == '__main__':
     get_login()
     print(get_class())
 

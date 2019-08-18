@@ -39,7 +39,7 @@ def get_pay_keyboard_number_location(im, pwd):
     templates = {}
     positions = {}
     lie={}
-    nimgpath ='C:/Users/Administrator.SKY-20170908FNB/PycharmProjects/sever/main/api2/ecard/get_pwd' # 数字图片不在同目录时使用
+    nimgpath ='/Users/qkyzs/Desktop/sever/main/api/ecard/get_pwd' # 数字图片不在同目录时使用
     #nimgpath='/main/api2/ecard/get_pwd'
     for i in numbers:
         templates[i] = os.path.join(nimgpath, "{}.png".format(i))

@@ -28,7 +28,6 @@ from .yjs.login import get_login,get_score,get_class
 from .news_notice.notice_list import nepu_notice
 from .news_notice.get_list import nepu_news
 # from .news_notice.jiexi import about
-
 from .news_notice.jiexi import about
 import ast
 
@@ -63,9 +62,9 @@ def book_info():
 @api.route('/jwc/score_updata',methods=['GET'])
 def score_updata():
     '''更新成绩'''
-    xh='178003070655'
-    pwd_info=get_pwd(xh)
-    jw_pwd=pwd_info['jw']
+    xh='130101140323'
+    # pwd_info=get_pwd(xh)
+    jw_pwd='032050'
     if xh[2:4] == '80':
         login=get_login(xh,jw_pwd)
         if login['status']==True:
@@ -74,8 +73,9 @@ def score_updata():
             return jsonify(login)
     else:
         pwd_info=get_pwd(xh)
-        jw_pwd=pwd_info['jw']
+        # jw_pwd=pwd_info['jw']
         login=login_jwc(xh,jw_pwd)
+        print(login)
         if login['status']==True:
             back=socer(login['data'])
 
